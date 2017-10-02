@@ -1806,7 +1806,7 @@ function MahjongGamePlayLayer:showLaiziCard(laizi, ani)
     if self.laizi_mj then self.laizi_mj:removeSelf() end
 
     self.img_show_wang = ccui.ImageView:create("mj/black_bg.png"):addTo(self, 1):setPosition(cc.p(55, 630)):setContentSize(cc.size(90,64)):ignoreContentAdaptWithSize(false):setScale9Enabled(true)
-    self.txt_show_wang = cc.LabelTTF:create("王\n牌","Arial", 22):setPosition(cc.p(30, 630)):setColor(helper.str2Color("#ebefeb")):addTo(self, 1)
+    self.txt_show_wang = cc.LabelTTF:create("鬼\n牌","Arial", 22):setPosition(cc.p(30, 630)):setColor(helper.str2Color("#ebefeb")):addTo(self, 1)
     self.laizi_mj = MahjongTile.new({id = laizi, type = 9, is_free = false}):addTo(self, 1)
     self.laizi_mj:setAnchorPoint(cc.p(0, 0))
     self.laizi_mj:setPosition(cc.p(70, 630))

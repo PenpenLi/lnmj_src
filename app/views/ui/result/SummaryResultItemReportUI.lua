@@ -15,6 +15,7 @@ function SummaryResultItemReportUI:onCreate()
         self.txPlayerName = helper.findNodeByName(self.resourceNode_,"txPlayerName");
         self.txPlayerAccount = helper.findNodeByName(self.resourceNode_,"txPlayerAccount");
         self.sFlagWinner = helper.findNodeByName(self.resourceNode_,"sFlagWinner");
+        self.sFlagCaishen = helper.findNodeByName(self.resourceNode_,"sFlagCaishen");
         self.sFlagPaoShou = helper.findNodeByName(self.resourceNode_,"sFlagPaoShou"):setVisible(false);
         self.txScores = helper.findNodeByName(self.resourceNode_,"txScores");
         self.sFlagRoomHost = helper.findNodeByName(self.resourceNode_, "sFlagRoomHost")
@@ -24,7 +25,7 @@ function SummaryResultItemReportUI:onCreate()
         self.hb_num = helper.findNodeByName(self.resourceNode_, "hb_num")
         self.hb_act_node = helper.findNodeByName(self.resourceNode_,"hb_act_node")
         self.money_node = helper.findNodeByName(self.resourceNode_,"money_node")
-    if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
+    if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() or UserData:isChangSha() or UserData:isNingXiang() then
         self.layoutZhuanZhuan:setVisible(true)
         self.layoutChangSha:setVisible(false)
         self.txZiMoCount = helper.findNodeByName(self.resourceNode_,"txZiMoCount");
@@ -32,16 +33,17 @@ function SummaryResultItemReportUI:onCreate()
         self.txDianPaoCount = helper.findNodeByName(self.resourceNode_,"txDianPaoCount");
         self.txAnGangCount = helper.findNodeByName(self.resourceNode_,"txAnGangCount");
         self.txMingGangCount = helper.findNodeByName(self.resourceNode_,"txMingGangCount");
-    elseif UserData:isChangSha() or UserData:isNingXiang() then
-        self.layoutZhuanZhuan:setVisible(false)
-        self.layoutChangSha:setVisible(true)
-        self.txDZiMoCount = helper.findNodeByName(self.layoutChangSha,"txDZiMoCount");
-        self.txXZiMoCount = helper.findNodeByName(self.layoutChangSha,"txXZiMoCount");
-        self.txDDianPaoCount = helper.findNodeByName(self.layoutChangSha,"txDDianPaoCount");
-        self.txXDianPaoCount = helper.findNodeByName(self.layoutChangSha,"txXDianPaoCount");
-        self.txDJiePaoCount = helper.findNodeByName(self.layoutChangSha,"txDJiePaoCount");
-        self.txXJiePaoCount = helper.findNodeByName(self.layoutChangSha,"txXJiePaoCount");        
     end
+    -- elseif UserData:isChangSha() or UserData:isNingXiang() then
+    --     self.layoutZhuanZhuan:setVisible(false)
+    --     self.layoutChangSha:setVisible(true)
+    --     self.txDZiMoCount = helper.findNodeByName(self.layoutChangSha,"txDZiMoCount");
+    --     self.txXZiMoCount = helper.findNodeByName(self.layoutChangSha,"txXZiMoCount");
+    --     self.txDDianPaoCount = helper.findNodeByName(self.layoutChangSha,"txDDianPaoCount");
+    --     self.txXDianPaoCount = helper.findNodeByName(self.layoutChangSha,"txXDianPaoCount");
+    --     self.txDJiePaoCount = helper.findNodeByName(self.layoutChangSha,"txDJiePaoCount");
+    --     self.txXJiePaoCount = helper.findNodeByName(self.layoutChangSha,"txXJiePaoCount");        
+    -- end
 end
 
 return SummaryResultItemReportUI

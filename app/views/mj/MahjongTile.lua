@@ -27,9 +27,17 @@ end
 function MahjongTile:setData(params)
     self.id = params.id or 1
     self.type = params.type
-    self.is_free = UserData:isLaizi() and self.id == 45
-    if params.is_dfree then
-        self.is_free = false
+    print("self.type======================="..self.type)
+    if UserData:isChangSha() then
+        self.is_free = UserData:isLaizi() and self.id == 47
+                if params.is_dfree then
+            self.is_free = false
+        end
+    else
+        self.is_free = UserData:isLaizi() and self.id == 45
+        if params.is_dfree then
+            self.is_free = false
+        end
     end
     self.is_bird = params.is_bird or false
     self.is_win_bird = params.is_win_bird or false
@@ -169,8 +177,8 @@ function MahjongTile:updateForLaiZi()
     end
 
     if UserData.laiziCardId and UserData.laiziCardId == self.id then
-        -- setTagImg("mj/mylaizi.png", "mj/laizi.png")
-        setTagImg("mj/mywang.png", "mj/wang.png")
+        setTagImg("mj/mylaizi.png", "mj/laizi.png")
+        --setTagImg("mj/mywang.png", "mj/wang.png")
     end
 
     -- if UserData.chaotianCardId and UserData.chaotianCardId == self.id then

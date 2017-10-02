@@ -146,10 +146,14 @@ function CardResultUI:createPlay(cardResult)
     if not cardResult then return end
     if( UserData:isZhuanZhuan() or UserData:isChangDe()) and cardResult.player_balance then
         plays = cardResult.player_balance
-    elseif UserData:isChangSha() and cardResult.changsha_player_balance then
-        plays = cardResult.changsha_player_balance
-    elseif UserData:isNingXiang() and cardResult.ningxiang_player_balance then
-        plays = cardResult.ningxiang_player_balance
+    elseif UserData:isChangSha() and cardResult.player_balance then
+        plays = cardResult.player_balance
+    elseif UserData:isNingXiang() and cardResult.player_balance then
+        plays = cardResult.player_balance    
+    -- elseif UserData:isChangSha() and cardResult.changsha_player_balance then
+    --     plays = cardResult.changsha_player_balance
+    -- elseif UserData:isNingXiang() and cardResult.ningxiang_player_balance then
+    --     plays = cardResult.ningxiang_player_balance
     elseif UserData:isChenZhou() and cardResult.player_balance then
         plays = cardResult.player_balance
     elseif UserData:isHongZhong() and cardResult.player_balance then
@@ -212,7 +216,7 @@ function CardResultUI:createPlay(cardResult)
                     local mj = MahjongTile.new({id =(jtiles[j])[k], type = 9, is_free = free,is_dfree = true}):addTo(self.sBg, 1)
                     mj:setPosition(cc.p(x-10, itemCenterY))
                     mj:setMyScale(mjScale)
-                    if (jtiles[j])[k]==45 and UserData:isLaizi() then
+                    if ((jtiles[j])[k] == 45 or (jtiles[j])[k] == 47) and UserData:isLaizi() then
                      local laiziImg = display.newSprite("mj/laizi.png"):addTo(mj, 0)
                      laiziImg:setPosition(cc.p(15, 25))
                     end
@@ -278,12 +282,14 @@ end
 --计算得分
 function CardResultUI:calculatePoint(play)
     if not play then return end
-    local point = 0    
-    if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
-        point =  play.birdPoint+play.gangPoint+play.huPoint
-    elseif UserData:isChangSha() or UserData:isNingXiang() then
-        point = play.getpoint
-    end 
+    local point = 0  
+    point =  play.birdPoint+play.gangPoint+play.huPoint  
+
+    -- if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
+    --     point =  play.birdPoint+play.gangPoint+play.huPoint
+    -- elseif UserData:isChangSha() or UserData:isNingXiang() then
+    --     point = play.getpoint
+    -- end 
     return point
 end
 
@@ -296,7 +302,7 @@ function CardResultUI:createZhuoniao(tiles)
     if UserData:isHongZhong() then
         tzhouniao= cc.LabelTTF:create("扎码", self.font, 30):addTo(self.layout_zhuoniao,1)
     else
-        tzhouniao= cc.LabelTTF:create("捉鸟", self.font, 30):addTo(self.layout_zhuoniao,1)
+        tzhouniao= cc.LabelTTF:create("买马", self.font, 30):addTo(self.layout_zhuoniao,1)
     end
     tzhouniao:setAnchorPoint(cc.p(0,0.5))
     tzhouniao:setPosition(cc.p(5, 30))
@@ -326,7 +332,7 @@ function CardResultUI:createZhuoniao(tiles)
         end
         mj:setPosition(cc.p(x, 30))
         mj:setMyScale(mjScale)
-        if tiles[i]==45 and UserData:isLaizi() then
+        if (tiles[i]==45 or tiles[i]==47) and UserData:isLaizi() then
             local laiziImg = display.newSprite("mj/laizi.png"):addTo(mj, 0)
             laiziImg:setPosition(cc.p(15, 25))
         end
@@ -341,14 +347,6 @@ function CardResultUI:isGetBird(tile, getbird)
         if (tile < 40 and ( mode ==1 or mode ==5 or mode ==9)) or (tile==45 and UserData:isLaizi()) then
             return true
         end
-    -- elseif UserData:isHongZhong() then
-    --     if nil == UserData.cardResult.zhongbird then return false end
-    --     for _, id in pairs(UserData.cardResult.zhongbird) do
-    --         if id == tile then
-    --             return true
-    --         end
-    --     end
-    --     return false
     elseif (UserData.isChangSha() or UserData:isNingXiang()) and getbird then
         for _k,v in pairs(getbird) do
             if tile == v then
@@ -424,113 +422,116 @@ function CardResultUI:getHuDescriStr(play,i)
             extraStr = ""
         end
         playOthertypeStr = self:getHutype(play.huType)..self:getGangType(play.gangType)..extraStr..self:getBirdCount(i)
-    elseif UserData:isChangSha() or UserData:isNingXiang() then
-        local first_hu
-        local hu_info
-        if play.first_hu and play.first_hu ~= "" then
-            first_hu = json.decode(play.first_hu)
-        end
-        if play.hu_info and play.hu_info ~= "" then
-            hu_info = json.decode(play.hu_info)
-        end
-         -- 起手胡
-        if first_hu then
-            if first_hu.bigfour and #first_hu.bigfour > 0 then
-                if #first_hu.bigfour == 1 then
-                    playOthertypeStr = playOthertypeStr .. "四喜 "
-                else
-                    playOthertypeStr = playOthertypeStr .. "四喜X" .. #first_hu.bigfour .. " "
-                end
-                
-            end
-            if first_hu.lose_one_color then
-                playOthertypeStr = playOthertypeStr .. "缺一色 "
-            end
-            if first_hu.banban then
-                playOthertypeStr = playOthertypeStr .. "板板胡 "
-            end
-            if first_hu.liuliushun then
-                playOthertypeStr = playOthertypeStr .. "六六顺 "
-            end
-        end
-
-        -- 大胡
-        if hu_info then
-            if hu_info.tianhu then
-                local num = hu_info.tianhu > 1 and "X"..tostring(hu_info.tianhu) or ""
-                playOthertypeStr = playOthertypeStr .. "天胡 "..num
-            end
-            if hu_info.dihu then
-                local num = hu_info.dihu > 1 and "X"..tostring(hu_info.dihu) or ""
-                playOthertypeStr = playOthertypeStr .. "地胡 "..num
-            end
-            if hu_info.allask then
-                local num = hu_info.allask > 1 and "X"..tostring(hu_info.allask) or ""
-                playOthertypeStr = playOthertypeStr .. "全求人 "..num
-            end
-            if hu_info.pengpenghu then
-                local num = hu_info.pengpenghu > 1 and "X"..tostring(hu_info.pengpenghu) or ""
-                playOthertypeStr = playOthertypeStr .. "碰碰胡 "..num
-            end
-            if hu_info.jiangjianghu then
-                local num = hu_info.jiangjianghu > 1 and "X"..tostring(hu_info.jiangjianghu) or ""
-                playOthertypeStr = playOthertypeStr .. "将将胡 "..num
-            end
-            if hu_info.qingyise then
-                local num = hu_info.qingyise > 1 and "X"..tostring(hu_info.qingyise) or ""
-                playOthertypeStr = playOthertypeStr .. "清一色 "..num
-            end
-            if hu_info.haidilao then
-                local num = hu_info.haidilao > 1 and "X"..tostring(hu_info.haidilao) or ""
-                playOthertypeStr = playOthertypeStr .. "海底捞月 "..num
-            end
-            if hu_info.haidipao then
-                local num = hu_info.haidipao > 1 and "X"..tostring(hu_info.haidipao) or ""
-                playOthertypeStr = playOthertypeStr .. "海底炮 "..num
-            end
-            if hu_info.seven_hu then
-                local num = hu_info.seven_hu > 1 and "X"..tostring(hu_info.seven_hu) or ""
-                playOthertypeStr = playOthertypeStr .. "七小对 "..num
-            end
-            if hu_info.hao_seven_hu then
-                local num = hu_info.hao_seven_hu > 1 and "X"..tostring(hu_info.hao_seven_hu) or ""
-                playOthertypeStr = playOthertypeStr .. "豪华七小对 "..num
-            end
-            if hu_info.shuang_hao_seven_hu then
-                local num = hu_info.shuang_hao_seven_hu > 1 and "X"..tostring(hu_info.shuang_hao_seven_hu) or ""
-                playOthertypeStr = playOthertypeStr .. "双豪华七小对 "..num
-            end
-            if hu_info.ganghua then
-                local num = hu_info.ganghua > 1 and "X"..tostring(hu_info.ganghua) or ""
-                playOthertypeStr = playOthertypeStr .. "杠上开花 "..num
-            end
-            if hu_info.qiangganghu then
-                local num = hu_info.qiangganghu > 1 and "X"..tostring(hu_info.qiangganghu) or ""
-                playOthertypeStr = playOthertypeStr .. "抢杠胡 "..num
-            end
-            if hu_info.gangpao then
-                local num = hu_info.gangpao > 1 and "X"..tostring(hu_info.gangpao) or ""
-                playOthertypeStr = playOthertypeStr .. "杠上炮 "..num
-            end
-            if hu_info.baoting then
-                local num = hu_info.baoting > 1 and "X"..tostring(hu_info.baoting) or ""
-                playOthertypeStr = playOthertypeStr .. "报听 "..num
-            end
-            if hu_info.menqing then
-                local num = hu_info.menqing > 1 and "X"..tostring(hu_info.menqing) or ""
-                playOthertypeStr = playOthertypeStr .. "门清 "..num
-            end
-            if hu_info.nolaizihu then
-                local num = hu_info.nolaizihu > 1 and "X"..tostring(hu_info.nolaizihu) or ""
-                playOthertypeStr = playOthertypeStr .. "无王大胡 "..num
-            end
-        end
-        playOthertypeStr = playOthertypeStr .. self:getHutype(play.huType) .." "
-        if  play.getbird > 0 then
-            playOthertypeStr = playOthertypeStr .. "中鸟X" .. play.getbird
-        end
-        print("playOthertypeStr" .. playOthertypeStr)
+    else
+        playOthertypeStr = self:getHutype(play.huType)..self:getGangType(play.gangType)..self:getBirdCount(i)
     end
+    -- elseif UserData:isChangSha() or UserData:isNingXiang() then
+    --     local first_hu
+    --     local hu_info
+    --     if play.first_hu and play.first_hu ~= "" then
+    --         first_hu = json.decode(play.first_hu)
+    --     end
+    --     if play.hu_info and play.hu_info ~= "" then
+    --         hu_info = json.decode(play.hu_info)
+    --     end
+    --      -- 起手胡
+    --     if first_hu then
+    --         if first_hu.bigfour and #first_hu.bigfour > 0 then
+    --             if #first_hu.bigfour == 1 then
+    --                 playOthertypeStr = playOthertypeStr .. "四喜 "
+    --             else
+    --                 playOthertypeStr = playOthertypeStr .. "四喜X" .. #first_hu.bigfour .. " "
+    --             end
+                
+    --         end
+    --         if first_hu.lose_one_color then
+    --             playOthertypeStr = playOthertypeStr .. "缺一色 "
+    --         end
+    --         if first_hu.banban then
+    --             playOthertypeStr = playOthertypeStr .. "板板胡 "
+    --         end
+    --         if first_hu.liuliushun then
+    --             playOthertypeStr = playOthertypeStr .. "六六顺 "
+    --         end
+    --     end
+
+    --     -- 大胡
+    --     if hu_info then
+    --         if hu_info.tianhu then
+    --             local num = hu_info.tianhu > 1 and "X"..tostring(hu_info.tianhu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "天胡 "..num
+    --         end
+    --         if hu_info.dihu then
+    --             local num = hu_info.dihu > 1 and "X"..tostring(hu_info.dihu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "地胡 "..num
+    --         end
+    --         if hu_info.allask then
+    --             local num = hu_info.allask > 1 and "X"..tostring(hu_info.allask) or ""
+    --             playOthertypeStr = playOthertypeStr .. "全求人 "..num
+    --         end
+    --         if hu_info.pengpenghu then
+    --             local num = hu_info.pengpenghu > 1 and "X"..tostring(hu_info.pengpenghu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "碰碰胡 "..num
+    --         end
+    --         if hu_info.jiangjianghu then
+    --             local num = hu_info.jiangjianghu > 1 and "X"..tostring(hu_info.jiangjianghu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "将将胡 "..num
+    --         end
+    --         if hu_info.qingyise then
+    --             local num = hu_info.qingyise > 1 and "X"..tostring(hu_info.qingyise) or ""
+    --             playOthertypeStr = playOthertypeStr .. "清一色 "..num
+    --         end
+    --         if hu_info.haidilao then
+    --             local num = hu_info.haidilao > 1 and "X"..tostring(hu_info.haidilao) or ""
+    --             playOthertypeStr = playOthertypeStr .. "海底捞月 "..num
+    --         end
+    --         if hu_info.haidipao then
+    --             local num = hu_info.haidipao > 1 and "X"..tostring(hu_info.haidipao) or ""
+    --             playOthertypeStr = playOthertypeStr .. "海底炮 "..num
+    --         end
+    --         if hu_info.seven_hu then
+    --             local num = hu_info.seven_hu > 1 and "X"..tostring(hu_info.seven_hu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "七小对 "..num
+    --         end
+    --         if hu_info.hao_seven_hu then
+    --             local num = hu_info.hao_seven_hu > 1 and "X"..tostring(hu_info.hao_seven_hu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "豪华七小对 "..num
+    --         end
+    --         if hu_info.shuang_hao_seven_hu then
+    --             local num = hu_info.shuang_hao_seven_hu > 1 and "X"..tostring(hu_info.shuang_hao_seven_hu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "双豪华七小对 "..num
+    --         end
+    --         if hu_info.ganghua then
+    --             local num = hu_info.ganghua > 1 and "X"..tostring(hu_info.ganghua) or ""
+    --             playOthertypeStr = playOthertypeStr .. "杠上开花 "..num
+    --         end
+    --         if hu_info.qiangganghu then
+    --             local num = hu_info.qiangganghu > 1 and "X"..tostring(hu_info.qiangganghu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "抢杠胡 "..num
+    --         end
+    --         if hu_info.gangpao then
+    --             local num = hu_info.gangpao > 1 and "X"..tostring(hu_info.gangpao) or ""
+    --             playOthertypeStr = playOthertypeStr .. "杠上炮 "..num
+    --         end
+    --         if hu_info.baoting then
+    --             local num = hu_info.baoting > 1 and "X"..tostring(hu_info.baoting) or ""
+    --             playOthertypeStr = playOthertypeStr .. "报听 "..num
+    --         end
+    --         if hu_info.menqing then
+    --             local num = hu_info.menqing > 1 and "X"..tostring(hu_info.menqing) or ""
+    --             playOthertypeStr = playOthertypeStr .. "门清 "..num
+    --         end
+    --         if hu_info.nolaizihu then
+    --             local num = hu_info.nolaizihu > 1 and "X"..tostring(hu_info.nolaizihu) or ""
+    --             playOthertypeStr = playOthertypeStr .. "无王大胡 "..num
+    --         end
+    --     end
+    --     playOthertypeStr = playOthertypeStr .. self:getHutype(play.huType) .." "
+    --     if  play.getbird > 0 then
+    --         playOthertypeStr = playOthertypeStr .. "中鸟X" .. play.getbird
+    --     end
+    --     print("playOthertypeStr" .. playOthertypeStr)
+    -- end
     return playOthertypeStr
 end
 
@@ -551,20 +552,33 @@ function CardResultUI:getHutype(hutype)
             return ""
         end
     elseif UserData:isChangSha() or UserData:isNingXiang() then
-        --#胡的类型 （1自摸胡， 2 点炮， 3，接炮 4 大胡点炮 ， 大胡接炮）
         if hutype==1 then
             return "自摸胡"..TSpace
         elseif hutype==2 then
-            return "点炮"..TSpace
+            return "接炮胡"..TSpace
         elseif hutype==3 then
-            return "接炮"..TSpace 
+            return "抢杠胡"..TSpace
         elseif hutype==4 then
-            return "大胡点炮"..TSpace
+            return "放炮"..TSpace
         elseif hutype==5 then
-            return "大胡接炮"..TSpace
+            return "被抢杠"..TSpace
         else
             return ""
-        end 
+        end
+        -- --#胡的类型 （1自摸胡， 2 点炮， 3，接炮 4 大胡点炮 ， 大胡接炮）
+        -- if hutype==1 then
+        --     return "自摸胡"..TSpace
+        -- elseif hutype==2 then
+        --     return "点炮"..TSpace
+        -- elseif hutype==3 then
+        --     return "接炮"..TSpace 
+        -- elseif hutype==4 then
+        --     return "大胡点炮"..TSpace
+        -- elseif hutype==5 then
+        --     return "大胡接炮"..TSpace
+        -- else
+        --     return ""
+        -- end 
     end
     return ""
 end
@@ -615,7 +629,7 @@ function CardResultUI:getBirdCount(chair_id)
                 return "中码X"..self.bridCount
             end
         else
-            return "中鸟X"..self.bridCount
+            return "中马X"..self.bridCount
         end
     end
     return ""

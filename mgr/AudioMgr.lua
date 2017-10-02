@@ -176,6 +176,7 @@ function AudioMgr:choseMj(sex)
 end
 
 function AudioMgr:on_mahjong_tile(tile_id,sex)
+	print("tile_id================================"..tile_id)
 	if UserData.isSkipAnimate then return end
 	if LocalData.data._is_sound_enable and LocalData.data._is_sound_volume > 0 then
 		local sid = tile_id % 10

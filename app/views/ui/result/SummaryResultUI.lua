@@ -109,14 +109,15 @@ function SummaryResultUI:updateSummaryUI()
     dump(UserData.game_balance_result)
     local entity  = nil
     if UserData.game_balance_result  == nil then return end
-        
-    if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
-        entity = UserData.game_balance_result.player_result
-    elseif UserData:isChangSha() or UserData:isNingXiang() then
-        entity = UserData.game_balance_result.player_changsha_result
-    else
-        return
-    end
+
+    entity = UserData.game_balance_result.player_result     
+    -- if UserData:isChangSha() or UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
+    --     entity = UserData.game_balance_result.player_result
+    -- elseif UserData:isNingXiang() then
+    --     entity = UserData.game_balance_result.player_changsha_result
+    -- else
+    --     return
+    -- end
 
     local maxPoint 
     self.uiList = {}
@@ -158,28 +159,27 @@ function SummaryResultUI:updateWinnerFlag(maxPoint)
     if not UserData.game_balance_result then return end
     local maxPointIndexList = {}
     local entity = nil
-    if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
-        entity = UserData.game_balance_result.player_result
-    elseif UserData:isChangSha() or UserData:isNingXiang() then
-        entity = UserData.game_balance_result.player_changsha_result
-    else
-        return
-    end
-
+    -- if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
+    --     entity = UserData.game_balance_result.player_result
+    -- elseif UserData:isChangSha() or UserData:isNingXiang() then
+    --     entity = UserData.game_balance_result.player_changsha_result
+    -- else
+    --     return
+    -- end
+    entity = UserData.game_balance_result.player_result
     local winner = UserData.game_balance_result.win
     for i = 1, #entity do
-
         self.uiList[i].sFlagWinner:setVisible(entity[i].uid == winner)
-
     end
 
     --分数都为0，没有大赢家
-   if(maxPoint == 0) then
+    if(maxPoint == 0) then
        for i = 1, #entity do
            self.uiList[i].sFlagWinner:setVisible(false)
+           self.uiList[i].sFlagCaishen:setVisible(false)
        end
        return
-   end
+    end
     --分数都为最大的，设为大赢家
     for i=1,#entity do
         if entity[i].uid ~= winner then --上面已经设置了
@@ -191,6 +191,23 @@ function SummaryResultUI:updateWinnerFlag(maxPoint)
     for k,v in ipairs(maxPointIndexList) do
         self.uiList[v].sFlagWinner:setVisible(true)
     end
+
+    --分数都为最小的，设为大财神
+    local minIndex = 1
+    local minPoint = 10000000
+    for i=1,#entity do
+        if entity[i].point < minPoint then
+            minPoint = entity[i].point
+            minIndex = i
+        end
+        self.uiList[i].sFlagCaishen:setVisible(false)
+    end
+    self.uiList[minIndex].sFlagCaishen:setVisible(true)
+    if entity[minIndex].uid == winner then
+        self.uiList[minIndex].sFlagCaishen:setVisible(false)
+    end
+
+
 end
 
 -- 最佳炮手标识
@@ -201,23 +218,24 @@ function SummaryResultUI:updatePaoShouFlag()
 
     print("设置最佳炮手标识")
     local entity = nil
-    if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
-        entity = UserData.game_balance_result.player_result
-    elseif UserData:isChangSha() or UserData:isNingXiang() then
-        entity = UserData.game_balance_result.player_changsha_result
-    else
-        return
-    end
-
+    -- if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
+    --     entity = UserData.game_balance_result.player_result
+    -- elseif UserData:isChangSha() or UserData:isNingXiang() then
+    --     entity = UserData.game_balance_result.player_changsha_result
+    -- else
+    --     return
+    -- end
+    entity = UserData.game_balance_result.player_result
     local maxDianPao = 0  
     local dianPaoList = {}  
 
     for i = 1, #entity do
-        if UserData:isChangSha() or UserData:isNingXiang() then
-            table.insert(dianPaoList,entity[i].dahudianpao + entity[i].xiaohudianpao)
-        else
-            table.insert(dianPaoList,entity[i].dianPao)
-        end
+        -- if UserData:isChangSha() or UserData:isNingXiang() then
+        --     table.insert(dianPaoList,entity[i].dahudianpao + entity[i].xiaohudianpao)
+        -- else
+        --     table.insert(dianPaoList,entity[i].dianPao)
+        -- end
+        table.insert(dianPaoList,entity[i].dianPao)
         --找最大
         if dianPaoList[i] > maxDianPao then
             maxDianPao = dianPaoList[i]
@@ -237,9 +255,12 @@ function SummaryResultUI:updateLayerInfo(i, entity)
         count = #UserData.game_balance_result.player_result
     elseif (UserData:isChenZhou() or UserData:isHongZhong()) and  UserData.game_balance_result.player_result then
         count = #UserData.game_balance_result.player_result
-    elseif UserData:isChangSha() or UserData:isNingXiang() and UserData.game_balance_result.player_changsha_result then
-        count = #UserData.game_balance_result.player_changsha_result
+    else
+        count = #UserData.game_balance_result.player_result
     end
+    -- elseif UserData:isChangSha() or UserData:isNingXiang() and UserData.game_balance_result.player_changsha_result then
+    --     count = #UserData.game_balance_result.player_changsha_result
+    -- end
     local ui = uiRoot:create(uiname);
     local dividerWidth =( consts.Size.width - count * uiWidth) / (count + 1)
     dividerWidth =( 1202 - 57*2- count * uiWidth) / (count + 1)
@@ -277,20 +298,21 @@ function SummaryResultUI:updateLayerInfo(i, entity)
         ui.txDianPaoCount:setString("点炮次数:   " .. entity.dianPao);
         ui.txAnGangCount:setString("暗杠条数:   " .. entity.anGang);
         ui.txMingGangCount:setString("明杠条数:   " .. (entity.mingGang + entity.suoGang));
-    elseif (UserData:isHongZhong() or UserData:isChenZhou()) and  UserData.game_balance_result.player_result then
+    elseif (UserData:isHongZhong() or UserData:isChenZhou() or UserData:isChangSha() or UserData:isNingXiang()) and  UserData.game_balance_result.player_result then
         ui.txZiMoCount:setString("自摸次数:   " .. entity.ziMo);
         ui.txJiePaoCount:setString("接炮次数:   " .. entity.jiePao);
         ui.txDianPaoCount:setString("点炮次数:   " .. entity.dianPao);
         ui.txAnGangCount:setString("暗杠条数:   " .. entity.anGang);
         ui.txMingGangCount:setString("明杠条数:   " .. (entity.mingGang + entity.suoGang));
-    elseif (UserData:isChangSha() or UserData:isNingXiang()) and UserData.game_balance_result.player_changsha_result then
-        ui.txDZiMoCount:setString("大胡自摸:   " .. entity.dahuzimo);
-        ui.txXZiMoCount:setString("小胡自摸:   " .. entity.xiaohuzimo);
-        ui.txDDianPaoCount:setString("大胡点炮:   " .. entity.dahudianpao);
-        ui.txXDianPaoCount:setString("小胡点炮:   " .. entity.xiaohudianpao);
-        ui.txDJiePaoCount:setString("大胡接炮:   " .. entity.dahujiepao);
-        ui.txXJiePaoCount:setString("小胡接炮:   " .. (entity.xiaohujiepao));
     end
+    -- elseif (UserData:isChangSha() or UserData:isNingXiang()) and UserData.game_balance_result.player_changsha_result then
+    --     ui.txDZiMoCount:setString("大胡自摸:   " .. entity.dahuzimo);
+    --     ui.txXZiMoCount:setString("小胡自摸:   " .. entity.xiaohuzimo);
+    --     ui.txDDianPaoCount:setString("大胡点炮:   " .. entity.dahudianpao);
+    --     ui.txXDianPaoCount:setString("小胡点炮:   " .. entity.xiaohudianpao);
+    --     ui.txDJiePaoCount:setString("大胡接炮:   " .. entity.dahujiepao);
+    --     ui.txXJiePaoCount:setString("小胡接炮:   " .. (entity.xiaohujiepao));
+    -- end
     ui.txPlayerAccount:setString("账号:" .. entity.uid);
     ui.txScores:setString(( string.gsub(tostring(entity.point),"-" ,"/") ))
     return ui

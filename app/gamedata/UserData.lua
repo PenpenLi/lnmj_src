@@ -185,16 +185,25 @@ function UserData:setTableConfig(table_config)
     if temp.piao then
         UserData:setRule("飘")
     end
-    if temp.laizi then
-        UserData:setRule("红中癞子")
+    if(UserData.curMahjongType == 2)then
+        if temp.laizi then
+            if temp.baiban then
+                UserData:setRule("白板做鬼")
+            end
+        else
+            UserData:setRule("无鬼")
+        end
+    else
+        if temp.laizi then
+            UserData:setRule("红中癞子")
+        end
     end
-
     if temp.seven_hu then
         UserData:setRule("胡七对")
     end
 
     if temp.kaiwang then
-        UserData:setRule("开王")
+        UserData:setRule("翻鬼")
     end
 
     if temp.firstHu then
@@ -215,7 +224,11 @@ function UserData:setTableConfig(table_config)
         end
     else
         if temp.find_bird ~= nil and temp.find_bird > 0 then
-            UserData:setRule("抓" .. temp.find_bird .. "鸟")
+            if 1 == temp.find_bird then
+                UserData:setRule("爆炸马")
+            else
+                UserData:setRule("买" .. temp.find_bird .. "马")
+            end
         end
     end
     if temp.bird_point ~= nil and temp.bird_point > 0 then
@@ -261,8 +274,14 @@ function UserData:getShareDesc(data)
     if temp.piao then
        txt = txt .."飘 "
     end
-    if temp.laizi then
-        txt = txt .."红中癞子 "
+    if(UserData.curMahjongType == 2)then
+        if temp.baiban then
+            txt = txt .."白板做鬼"
+        end
+    else
+        if temp.laizi then
+            txt = txt .."红中癞子 "
+        end
     end
 
     if temp.seven_hu then
@@ -270,7 +289,7 @@ function UserData:getShareDesc(data)
     end
 
     if temp.kaiwang then
-        txt = txt .."开王 "
+        txt = txt .."翻鬼 "
     end
 
     if temp.firstHu then
@@ -290,8 +309,12 @@ function UserData:getShareDesc(data)
             end
         end
     else
-        if temp.find_bird ~= nil and temp.find_bird > 0 then
-            txt = txt .."抓" .. temp.find_bird .. "鸟 "
+         if temp.find_bird ~= nil and temp.find_bird > 0 then
+            if 1 == temp.find_bird then
+                txt = txt .."爆炸马 "
+            else
+                txt = txt .."买" .. temp.find_bird .. "马 "
+            end
         end
     end
 
@@ -312,21 +335,45 @@ end
 
   
 function UserData:isLaizi()
-    if self.table_config then
-        return self.table_config.rule.laizi or self.table_config.rule.hongzhong
+    if self.isChangSha() then
+        if self.table_config then
+            if self.table_config.rule.laizi then
+                if self.table_config.rule.baiban then
+                    return true
+                end
+            end
+        else
+            return false
+        end
     else
-        return false
+        if self.table_config then
+            return self.table_config.rule.laizi or self.table_config.rule.hongzhong
+        else
+            return false
+        end
     end
 end
 
 --获取总牌数
 function UserData:getTotalCardNum()
-    if self.table_config.player_count < 3 then
-        return 64
-    elseif self:isLaizi() then
-        return 112
+    if self.isChangSha() then
+        if self.table_config.rule.no_feng == true then --不带风
+            if self:isLaizi() then --有鬼牌
+                return 112
+            else --无鬼牌
+                return 108
+            end
+        else --带风
+            return 136
+        end
     else
-        return 108
+        if self.table_config.player_count < 3 then
+            return 64
+        elseif self:isLaizi() then
+            return 112
+        else
+            return 108
+        end
     end
 end
 
@@ -541,11 +588,23 @@ function UserData:getQiDuiTbl()
 end
 
 function UserData:getLaiziId()
-    if UserData:isLaizi() then
-        return 45
-    elseif UserData.laiziCardId then
-        return UserData.laiziCardId
-    else
+    if self.isChangSha() then
+        if self.table_config.rule.laizi then
+            if self.table_config.rule.baiban then
+                return 47
+            end
+        end
+        if UserData.laiziCardId then
+            return UserData.laiziCardId
+        end
         return 0
+    else
+        if UserData:isLaizi() then
+            return 45
+        elseif UserData.laiziCardId then
+            return UserData.laiziCardId
+        else
+            return 0
+        end
     end
 end

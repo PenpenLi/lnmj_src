@@ -99,7 +99,8 @@ function HelpUI:onClickTab(tag)
     elseif(tag == 5) then
         url = "uires/uiSetting/ningxiang.html"
     elseif(tag == 2) then
-        url = "uires/uiSetting/changsha.html"
+        --url = "uires/uiSetting/changsha.html"
+        url = "uires/uiSetting/tuidaohu.html"
     elseif(tag == 6) then
         url = "uires/uiSetting/changde.html"
     elseif(tag == 3) then
@@ -172,9 +173,10 @@ function HelpUI:update(data)
         btn.m_btn:addClickEventListener(function(sender) self:onClickTab(sender:getTag()) end)
     end
     --1转转 2长沙 3郴州 4红中 5宁乡 6常德
-    --1转转 2肇庆 3广东鸡胡 4红中 5推倒胡 6常德
+    --1转转 2推倒胡 3肇庆麻将 4红中 5广东鸡胡
     --顺序
-    local tab_seq_list = {1, 5, 2, 4, 3}
+    --local tab_seq_list = {1, 5, 2, 4, 3}
+    local tab_seq_list = {1, 2, 3, 4, 5}
     for _, v in pairs(tab_seq_list) do
         self.list_tab:pushBackCustomItem(self["tab_btn_"..v])
     end

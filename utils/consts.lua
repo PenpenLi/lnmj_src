@@ -94,14 +94,14 @@ consts.GameHuType = {
 
 consts.GameTypeName = {
     "转转",
-    "长沙",
-    "郴州",
+    "推倒胡",
+    "肇庆",
     "红中",
-    "宁乡",
+    "广东鸡胡",
     "常德",
 }
 --能使用听牌提示的麻将类型 ps：对应GameTypeName，改的时候顺便改下
-consts.TingPaiGameType = {true,false,true,true,false,true}
+consts.TingPaiGameType = {true,true,true,true,true,true}
 
 consts.DefauleGameType = consts.GameType.zhuanzhuan
 
@@ -237,6 +237,7 @@ consts.GCloudVoice = {
 consts.wechatAppId =  "wxb6823d36e6268dc8"
 consts.roomCreateMsg = {}
 
+-- 转转
 consts.roomCreateMsg.tab_1 = 
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
@@ -244,28 +245,34 @@ consts.roomCreateMsg.tab_1 =
     {"玩法:",{1,"点炮胡","createWin1"},{1,"自摸胡","createWin2"},nil},
     {"",{2,"抢杠胡","createWin3"},{2,"可抢明杠","createWin5"}, nil},
     {"",{2,"庄闲算分","createCon1"},{2,"可胡七对","createCon2"},{2,"红中癞子","createCon3"}},
-    {"抓鸟:",{1,"抓2鸟","createPick2"},{1,"抓4鸟","createPick4"},{1,"抓6鸟","createPick6"},{2,"鸟2分","createCoin2"}}
+    {"抓鸟:",{1,"抓2鸟","createPick2"},{1,"抓4鸟","createPick4"},{1,"抓6鸟","createPick6"},{2,"鸟2分","createCoin2"}},
 }
 
-consts.roomCreateMsg.tab_2 = 
+--推倒胡
+consts.roomCreateMsg.tab_2 =
+{
+    {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
+    {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"},{1,"2人局","createP2"}},
+    {"玩法:",{1,"无鬼","createCon6"},{1,"白板做鬼","createCon6"},{1,"翻鬼","createCon6"}},
+    {"",{2,"抢杠胡","createWin3"},{2,"可抢明杠","createWin5"},{2,"可胡七对","createCon2"}},
+    {"",{2,"抢杠全包","createCon3"},{2,"杠爆全包","createCon3"},{2}},
+    {"",{2,"跟庄","createCon3"},{2,"节节高","createCon3"},{2,"不带风","createCon3"}},
+    {"买马:",{1,"买2马","createPick2"},{1,"买4马","createPick4"},{1,"买6马","createPick6"}},
+    {"",{1,"爆炸马","createma2"},{2,"马跟底分","createCon3"},{2}}
+}
+
+--肇庆
+consts.roomCreateMsg.tab_3 =
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
     {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},
-    {"-",{1},{1},{2}},
-    {"玩法:",{2,"庄闲算分","createCon1"},{2},{2}},
-    {"抓鸟:",{1,"抓2鸟","createPick2"},{1,"抓4鸟","createPick4"},{1,"抓6鸟","createPick6"},{2,"鸟2分","createCoin2"}}
+    {"玩法:",{2,"红中癞子","createCon3"},{2,"荒庄荒杠","createCon8"},{2}},
+    {"扎码:",{1,"一码全中","yimaquanzhong"}},
+    {"",{1,"扎2码","createma2"},{1,"扎4码","createma4"},{1,"扎6码","createma6"}}
 }
 
-consts.roomCreateMsg.tab_3 = 
-{
-    {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
-    {"人数:",{1,"4人局","createP4"}},
-    {"玩法:",{1,"点炮胡（可抢杠胡）","createWin4"}, nil,{1,"自摸胡","createWin2"}},
-    {"",{2,"飘","createCon4"},{2,"可胡七对","createCon2"},{2,"红中","createCon5"}},
-    {"抓鸟:",{1,"抓2鸟","createPick2"},{1,"抓4鸟","createPick4"},{1,"抓6鸟","createPick6"},{2,"金鸟","createPick7"}}
-}
-
-consts.roomCreateMsg.tab_4 = 
+--红中
+consts.roomCreateMsg.tab_4 =
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
     {"人数:",{1,"4人局","createP4"}},
@@ -274,16 +281,8 @@ consts.roomCreateMsg.tab_4 =
     {"",{1,"扎2码","createma2"},{1,"扎4码","createma4"},{1,"扎6码","createma6"}}
 }
 
-consts.roomCreateMsg.tab_5 = 
-{
-    {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
-    {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},
-    {"玩法:",{2,"开王","createCon6"},{2,"起手胡","createCon7"},{2}},
-    {"大胡:",{1,"6分","6fen"},{1,"7分","7fen"},{1,"8分","8fen"}},
-    {"抓鸟:",{1,"抓2鸟","createPick2"},{1,"抓4鸟","createPick4"},{1,"抓6鸟","createPick6"},{2,"鸟2分","createCoin2"}}
-}
-
-consts.roomCreateMsg.tab_6 = 
+--广东鸡胡
+consts.roomCreateMsg.tab_5 =
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
     {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},

@@ -243,68 +243,68 @@ local function huAction(layer)
                                 animation:removeSelf()
                             end)
                         }))
-	elseif UserData:isChangSha() or UserData:isNingXiang() then
-		local huList = {}
-		local balance
-		if UserData:isChangSha() then
-			balance = UserData.cardResult.changsha_player_balance
-		elseif UserData:isNingXiang() then
-			balance = UserData.cardResult.ningxiang_player_balance
-		end
-		for k,v in ipairs(balance) do
-			if #v.hu_info > 0 then
-				for i,j in pairs(json.decode(v.hu_info)) do
-					if j then
-						table.insert(huList,{i,k})
-					end
-				end
-			end
-		end
-		local playIndex = 1
-		local playHu = nil
-		playHu = function(huType)
-			if huType then
-				local animation = nil
-				if huType[1] ~= "pinghu" then
-					animation = AnimationView:create("hu","action/".. huType[1] ..".csb")
-					-- AudioMgr:on_hu_type(huType[1],curHuPlayer:get_sex())--绑音效
-				else
-					animation = AnimationView:create("hu","action/hu".. curHuType ..".csb")
-					-- AudioMgr:on_hu(curHuPlayer:get_sex(),curHuType)
-				end
-				animation:setPosition(nomalPosition[helper.getRealPos(huType[2],UserData.myChairId,UserData.table_config.player_count)])
-			    animation:gotoFrameAndPlay(0,false)
-			    animation:addTo(layer,1000)
-				performWithDelay(layer, function()
-					playHu(huList[playIndex])
-			    end, 1)
-			else
-				if UserData.table_config.rule.find_bird and UserData.table_config.rule.find_bird > 0 then
-		        	catchBirdAction(layer)
-		        else
-		        	curHuType = nil
-					curHuPlayer = nil
-					UIMgr:openUI(consts.UI.cardResultUI)
-					UserData.game_status = UserData.GAME_STATUS.nextWaiting
-		        end
-			end
-			playIndex = playIndex + 1
-		end
+	-- elseif UserData:isChangSha() or UserData:isNingXiang() then
+	-- 	local huList = {}
+	-- 	local balance
+	-- 	if UserData:isChangSha() then
+	-- 		balance = UserData.cardResult.changsha_player_balance
+	-- 	elseif UserData:isNingXiang() then
+	-- 		balance = UserData.cardResult.ningxiang_player_balance
+	-- 	end
+	-- 	for k,v in ipairs(balance) do
+	-- 		if #v.hu_info > 0 then
+	-- 			for i,j in pairs(json.decode(v.hu_info)) do
+	-- 				if j then
+	-- 					table.insert(huList,{i,k})
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 	end
+	-- 	local playIndex = 1
+	-- 	local playHu = nil
+	-- 	playHu = function(huType)
+	-- 		if huType then
+	-- 			local animation = nil
+	-- 			if huType[1] ~= "pinghu" then
+	-- 				animation = AnimationView:create("hu","action/".. huType[1] ..".csb")
+	-- 				-- AudioMgr:on_hu_type(huType[1],curHuPlayer:get_sex())--绑音效
+	-- 			else
+	-- 				animation = AnimationView:create("hu","action/hu".. curHuType ..".csb")
+	-- 				-- AudioMgr:on_hu(curHuPlayer:get_sex(),curHuType)
+	-- 			end
+	-- 			animation:setPosition(nomalPosition[helper.getRealPos(huType[2],UserData.myChairId,UserData.table_config.player_count)])
+	-- 		    animation:gotoFrameAndPlay(0,false)
+	-- 		    animation:addTo(layer,1000)
+	-- 			performWithDelay(layer, function()
+	-- 				playHu(huList[playIndex])
+	-- 		    end, 1)
+	-- 		else
+	-- 			if UserData.table_config.rule.find_bird and UserData.table_config.rule.find_bird > 0 then
+	-- 	        	catchBirdAction(layer)
+	-- 	        else
+	-- 	        	curHuType = nil
+	-- 				curHuPlayer = nil
+	-- 				UIMgr:openUI(consts.UI.cardResultUI)
+	-- 				UserData.game_status = UserData.GAME_STATUS.nextWaiting
+	-- 	        end
+	-- 		end
+	-- 		playIndex = playIndex + 1
+	-- 	end
 
-		--大胡要显示胡的类型
-		if huList[1][1] ~= "pinghu" then
-			local animation = AnimationView:create("hu","action/hu".. curHuType ..".csb")
-			-- AudioMgr:on_hu(curHuPlayer:get_sex(),curHuType)
-			animation:setPosition(nomalPosition[helper.getRealPos(huList[1][2],UserData.myChairId,UserData.table_config.player_count)])
-		    animation:gotoFrameAndPlay(0,false)
-		    animation:addTo(layer,1000)
-			performWithDelay(layer, function()
-				playHu(huList[playIndex])
-		    end, 1)
-		else
-			playHu(huList[playIndex])
-		end
-	elseif UserData:isZhuanZhuan() or UserData.isChenZhou() or UserData.isHongZhong() or UserData:isChangDe() then
+	-- 	--大胡要显示胡的类型
+	-- 	if huList[1][1] ~= "pinghu" then
+	-- 		local animation = AnimationView:create("hu","action/hu".. curHuType ..".csb")
+	-- 		-- AudioMgr:on_hu(curHuPlayer:get_sex(),curHuType)
+	-- 		animation:setPosition(nomalPosition[helper.getRealPos(huList[1][2],UserData.myChairId,UserData.table_config.player_count)])
+	-- 	    animation:gotoFrameAndPlay(0,false)
+	-- 	    animation:addTo(layer,1000)
+	-- 		performWithDelay(layer, function()
+	-- 			playHu(huList[playIndex])
+	-- 	    end, 1)
+	-- 	else
+	-- 		playHu(huList[playIndex])
+	-- 	end
+	elseif UserData:isZhuanZhuan() or UserData.isChenZhou() or UserData.isHongZhong() or UserData:isChangDe() or UserData:isChangSha() or UserData:isNingXiang() then
 		local animation = AnimationView:create("hu","action/hu".. curHuType ..".csb")
 		AudioMgr:on_hu(curHuPlayer:get_sex(),curHuType)
 		animation:setPosition(nomalPosition[curHuPlayer.pos])

@@ -42,40 +42,39 @@ end
 
 function createData:getGameRule(tab)
     local data = {}
-    if tab == 1 or tab == 3 then
+    if tab == 1 then
         if boxlist[3][1]:isSelected() then
             data.game_type = 1
         else
             data.game_type = 2
         end
-    elseif tab == 4 then
+    elseif tab == 4 or tab == 2 then
         data.game_type = 2
     end
     --庄闲
-    if 2 == tab then
-        data.idle       =  self:isSelected(boxlist[4][1])
-    elseif 1 == tab then
+    if 1 == tab then
         data.idle       =  self:isSelected(boxlist[5][1])
     end
     --胡7对
     if 4 == tab then
         data.seven_hu   = self:isSelected(boxlist[3][2])
-    elseif 3 == tab then
-        data.seven_hu   = self:isSelected(boxlist[4][2])
+    elseif 2 == tab then
+        data.seven_hu   = self:isSelected(boxlist[4][3])
     elseif 1 == tab then
         data.seven_hu   = self:isSelected(boxlist[5][2])
     end
     --癞子
-    if 3 == tab then
-        data.laizi      = self:isSelected(boxlist[4][3])
+    if 2 == tab then
+        data.laizi      = not(self:isSelected(boxlist[3][1]))
+        data.baiban = self:isSelected(boxlist[3][2])
+        data.kaiwang = self:isSelected(boxlist[3][3])
     elseif 1 == tab then
         data.laizi      = self:isSelected(boxlist[5][3])
-    elseif 6 == tab then
-        data.laizi  = self:isSelected(boxlist[3][1])
     end
     --可抢杠
-    if 3 == tab then
-        data.qiang_gang = boxlist[3][1]:isSelected()
+    if 2 == tab then
+        -- data.qiang_gang = boxlist[4][1]:isSelected()
+        data.qiang_gang = self:isSelected(boxlist[4][1])
     elseif 1 == tab then
         data.qiang_gang = self:isSelected(boxlist[4][1])
     end
@@ -104,6 +103,26 @@ function createData:getGameRule(tab)
                 data.find_bird = k*2
             end
         end
+    elseif 2 == tab then
+        if boxlist[8][1]:isSelected() then --爆炸马
+            data.find_bird = 1
+        end
+        for k,box in ipairs(boxlist[7]) do
+            if box:isSelected() then
+                data.find_bird = k*2
+            end
+        end
+        -- for k,box in ipairs(boxlist[7]) do
+        --     if box:isSelected() then
+        --         if k == 3 then
+        --             data.find_bird = 1
+        --         elseif k == 4 then
+        --             data.follow_point = 1
+        --         else
+        --             data.find_bird = k*2
+        --         end
+        --     end
+        -- end
     else
         for k,box in ipairs(boxlist[5]) do
             if box:isSelected() then
@@ -114,7 +133,7 @@ function createData:getGameRule(tab)
     if 1 == tab and boxlist[5][4] and self:isSelected(boxlist[5][4]) and data.find_bird > 0 then
         data.bird_point = 2
     elseif tab ~= 3 and boxlist[4][4] and self:isSelected(boxlist[4][4]) and data.find_bird > 0 then
-        data.bird_point = 2
+        --data.bird_point = 2
     end
     --特有的规则
     if 4 == tab then
@@ -124,8 +143,8 @@ function createData:getGameRule(tab)
             data.find_bird = 1
         end
     elseif 3 == tab then
-        data.piao       = self:isSelected(boxlist[4][1])
-        data.goldbird   = self:isSelected(boxlist[4][4])
+        -- data.piao       = self:isSelected(boxlist[4][1])
+        -- data.goldbird   = self:isSelected(boxlist[4][4])
     elseif 5 == tab then
         data.kaiwang = self:isSelected(boxlist[3][1])
         data.firstHu = self:isSelected(boxlist[3][2])
@@ -142,6 +161,17 @@ function createData:getGameRule(tab)
         end
     elseif 1 == tab then
         data.ming_gang = self:isSelected(boxlist[4][2])
+    elseif 2 == tab then
+        data.ming_gang = self:isSelected(boxlist[4][2])
+        data.qiang_gang_quanbao = self:isSelected(boxlist[5][1])
+        data.gang_bao_quanbao = self:isSelected(boxlist[5][2])
+        data.follow_banker = self:isSelected(boxlist[6][1])
+        data.steadily_high = self:isSelected(boxlist[6][2])
+        data.no_feng = self:isSelected(boxlist[6][3])
+        data.follow_point = self:isSelected(boxlist[8][2])
+        if data.laizi == true then
+            data.no_laizi_double = true
+        end
     end
     self:setGameTypeData(tab)
     data.roomData = defaultData[tab]
