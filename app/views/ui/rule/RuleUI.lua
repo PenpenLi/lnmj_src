@@ -140,7 +140,7 @@ function RuleUI:onCreate(data)
                     item:setVisible(false)
                 end
                 -- panel_click:addClickEventListener(function(sender)self:onCheckHandler(sender)end)
-                if(tmp[j][2] and tmp[j][2] == "鸟2分" or tmp[j][2] ==  "金鸟")then
+                if(tmp[j][2] and tmp[j][2] == "码2分" or tmp[j][2] ==  "金鸟")then
                     if 1 == UserData.curMahjongType then
                         self.m_ckBoxList[5][4] = cb
                         self.m_ckBoxListPanel[5][4] =panel_click

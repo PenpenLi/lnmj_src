@@ -78,12 +78,12 @@ end
 
 local function isGetBird(tile, getbird)
     -- if UserData.isZhuanZhuan() then
-    if UserData.isZhuanZhuan() or UserData.isChenZhou() or UserData:isChangDe() then
+    if UserData.isZhuanZhuan() or UserData:isChangDe() then
         local mode = tile%10
         if (tile < 40 and ( mode ==1 or mode ==5 or mode ==9)) or (tile==45 and UserData:isLaizi()) then
             return true
         end
-    elseif (UserData.isChangSha() or UserData:isNingXiang() or UserData.isHongZhong()) and getbird then
+    elseif (UserData.isChangSha() or UserData.isChenZhou() or UserData:isNingXiang() or UserData.isHongZhong()) and getbird then
         for _k,v in pairs(getbird) do
             if tile == v then
                 return true

@@ -492,7 +492,10 @@ game_hu_card 3009 {
   huType 5 : integer               #1:自摸、2:接炮、3:抢杠胡,4:放炮、5:被抢杠  0:没胡
   gangType 6 : string              # {anGang:1,jieGang:1,fangGang:1,mingGang:1} json   # 暗杠数    接杠数    放杠数     明杠数
   point    7 : integer                     
-  piaoPoint     8 : integer             #飘得失分                                          
+  piaoPoint     8 : integer             #飘得失分
+  fanType 9 : integer               #胡牌番类(1:平胡 2:七对)    
+  sevenDouble 10 : integer          #七对加倍
+  noLaiziDouble 11 : integer        #无鬼加倍                                         
 }
 
 .changsha_player_balance_info {

@@ -161,6 +161,9 @@ function CardResultUI:createPlay(cardResult)
     else
         return
     end
+    print("=====================================")
+    dump(plays)
+
     local sBgHeight = self.sBg:getContentSize().height
     print("sBgHeight=" .. sBgHeight)
     local count = #plays
@@ -216,9 +219,13 @@ function CardResultUI:createPlay(cardResult)
                     local mj = MahjongTile.new({id =(jtiles[j])[k], type = 9, is_free = free,is_dfree = true}):addTo(self.sBg, 1)
                     mj:setPosition(cc.p(x-10, itemCenterY))
                     mj:setMyScale(mjScale)
-                    if ((jtiles[j])[k] == 45 or (jtiles[j])[k] == 47) and UserData:isLaizi() then
-                     local laiziImg = display.newSprite("mj/laizi.png"):addTo(mj, 0)
-                     laiziImg:setPosition(cc.p(15, 25))
+                    -- if ((jtiles[j])[k] == 45 or (jtiles[j])[k] == 47) and UserData:isLaizi() then
+                    --     local laiziImg = display.newSprite("mj/laizi.png"):addTo(mj, 0)
+                    --     laiziImg:setPosition(cc.p(15, 25))
+                    -- end
+                    if (jtiles[j])[k] == UserData:getLaiziId() then
+                        local laiziImg = display.newSprite("mj/laizi.png"):addTo(mj, 0)
+                        laiziImg:setPosition(cc.p(15, 25))
                     end
                     x = x+(mjScale*mjWidth)
                 end
@@ -323,31 +330,47 @@ function CardResultUI:createZhuoniao(tiles)
         end
         local free = false
         local mj
-        chenzhouGoldBird = false
-        if UserData:isChenZhou() and UserData.table_config.rule.goldbird and 0 == totalBirdCount then --满足郴州金鸟条件
-            mj = MahjongTile.new({id=tiles[i], type = 21, is_free = free,is_bird = true,is_dfree = true}):addTo(self.layout_zhuoniao, 1)
-            chenzhouGoldBird = true
-        else
-            mj = MahjongTile.new({id=tiles[i], type = 21, is_free = free,is_bird = bird,is_dfree = true}):addTo(self.layout_zhuoniao, 1)
-        end
+        -- chenzhouGoldBird = false
+        -- if UserData:isChenZhou() and UserData.table_config.rule.goldbird and 0 == totalBirdCount then --满足郴州金鸟条件
+        --     mj = MahjongTile.new({id=tiles[i], type = 21, is_free = free,is_bird = true,is_dfree = true}):addTo(self.layout_zhuoniao, 1)
+        --     chenzhouGoldBird = true
+        -- else
+            -- mj = MahjongTile.new({id=tiles[i], type = 21, is_free = free,is_bird = bird,is_dfree = true}):addTo(self.layout_zhuoniao, 1)
+        -- end
+        mj = MahjongTile.new({id=tiles[i], type = 21, is_free = free,is_bird = bird,is_dfree = true}):addTo(self.layout_zhuoniao, 1)
+
         mj:setPosition(cc.p(x, 30))
         mj:setMyScale(mjScale)
-        if (tiles[i]==45 or tiles[i]==47) and UserData:isLaizi() then
+        -- if (tiles[i]==45 or tiles[i]==47) and UserData:isLaizi() then
+        --     local laiziImg = display.newSprite("mj/laizi.png"):addTo(mj, 0)
+        --     laiziImg:setPosition(cc.p(15, 25))
+        -- end
+        if tiles[i] == UserData:getLaiziId() then
             local laiziImg = display.newSprite("mj/laizi.png"):addTo(mj, 0)
             laiziImg:setPosition(cc.p(15, 25))
         end
         x = x+(mjScale*mjWidth)
     end
+    print("========birdCount========"..birdCount)
     return birdCount
 end
 
 function CardResultUI:isGetBird(tile, getbird)
-    if UserData.isZhuanZhuan() or UserData:isChenZhou() or UserData:isChangDe() or UserData:isHongZhong() then
-        local mode = tile%10
-        if (tile < 40 and ( mode ==1 or mode ==5 or mode ==9)) or (tile==45 and UserData:isLaizi()) then
-            return true
-        end
-    elseif (UserData.isChangSha() or UserData:isNingXiang()) and getbird then
+
+    print("============isGetBird==============="..tile)
+    -- if UserData.isZhuanZhuan() or UserData:isChangDe() or UserData:isHongZhong() then
+    --     local mode = tile%10
+    --     if (tile < 40 and ( mode ==1 or mode ==5 or mode ==9)) or (tile==45 and UserData:isLaizi()) then
+    --         return true
+    --     end
+    -- elseif (UserData.isChangSha() or UserData:isChenZhou() or UserData:isNingXiang()) and getbird then
+    --     for _k,v in pairs(getbird) do
+    --         if tile == v then
+    --             return true
+    --         end
+    --     end
+    -- end
+    if (UserData.isZhuanZhuan() or UserData:isChangDe() or UserData:isHongZhong() or UserData.isChangSha() or UserData:isChenZhou() or UserData:isNingXiang()) and getbird then
         for _k,v in pairs(getbird) do
             if tile == v then
                 return true
@@ -393,9 +416,9 @@ end
 function CardResultUI:getHuDescriStr(play,i)
     local playOthertypeStr=""
     if UserData:isZhuanZhuan() then
-        playOthertypeStr = self:getHutype(play.huType)..self:getGangType(play.gangType)..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..self:getBirdCount(i)
     elseif UserData:isChenZhou() then
-        playOthertypeStr = self:getHutype(play.huType)..self:getGangType(play.gangType)..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..self:getBirdCount(i)
         if play.piaoPoint then
             playOthertypeStr = playOthertypeStr.."飘"..play.piaoPoint.."分"
         end
@@ -421,9 +444,9 @@ function CardResultUI:getHuDescriStr(play,i)
         if (UserData:isHongZhong() or UserData:isChangDe()) and 1 == UserData.table_config.rule.find_bird then
             extraStr = ""
         end
-        playOthertypeStr = self:getHutype(play.huType)..self:getGangType(play.gangType)..extraStr..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..extraStr..self:getBirdCount(i)
     else
-        playOthertypeStr = self:getHutype(play.huType)..self:getGangType(play.gangType)..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..self:getBirdCount(i)
     end
     -- elseif UserData:isChangSha() or UserData:isNingXiang() then
     --     local first_hu
@@ -535,6 +558,38 @@ function CardResultUI:getHuDescriStr(play,i)
     return playOthertypeStr
 end
 
+function CardResultUI:getHuName(fanType)
+    if fanType == nil then
+        return ""
+    end
+    if fanType == 1 then
+        return "平胡"..TSpace
+    elseif fanType == 2 then
+        return "七对"..TSpace
+    else
+        return ""
+    end
+end
+
+function CardResultUI:getSevenDouble(sevenDouble)
+    if sevenDouble == nil then
+        return ""
+    end
+    if sevenDouble == 1 then
+        return "七对加倍"..TSpace
+    end
+    return ""
+end
+
+function CardResultUI:getNoLaiziDouble(noLaiziDouble)
+    if noLaiziDouble == nil then
+        return ""
+    end
+    if noLaiziDouble == 1 then
+        return "无鬼加倍"..TSpace
+    end
+    return ""
+end
 function CardResultUI:getHutype(hutype)
     if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
         --#1:自摸、2:接炮、3:抢杠胡,4:放炮、5:被抢杠  0:没胡
@@ -618,15 +673,23 @@ function CardResultUI:getBirdCount(chair_id)
         -- if UserData:isHongZhong() then
         --     return "中码X"..self.bridCount
         -- elseif UserData:isChangDe() then
-        if UserData:isChangDe() or UserData:isHongZhong() then
+        if UserData:isChangDe() or UserData:isHongZhong() or UserData:isChangSha() or UserData:isChenZhou() or UserData:isZhuanZhuan() then
             if 1 == #UserData.cardResult.birdCard then
-                if 45 == UserData.cardResult.birdCard[1] then
-                    return "中码X10"
+                if UserData:isHongZhong() then
+                    if 45 == UserData.cardResult.birdCard[1] then
+                        return "中马X10"
+                    else
+                        return "中马X"..(UserData.cardResult.birdCard[1] % 10)
+                    end
                 else
-                    return "中码X"..(UserData.cardResult.birdCard[1] % 10)
+                    if UserData.cardResult.birdCard[1] >= 41 then --风牌一个10马
+                        return "中马X10"
+                    else
+                        return "中马X"..(UserData.cardResult.birdCard[1] % 10)
+                    end    
                 end
             else
-                return "中码X"..self.bridCount
+                return "中马X"..self.bridCount
             end
         else
             return "中马X"..self.bridCount
@@ -660,7 +723,7 @@ function CardResultUI:laiziSort(listtiles)
     local newtiles = {}
     local zhongtiles = {}
     for i = 1,tilescount do
-        if (listtiles[listount])[i]==45 then
+        if (listtiles[listount])[i] == UserData:getLaiziId() then
             table.insert(zhongtiles,(listtiles[listount])[i])
         else
             table.insert(newtiles,(listtiles[listount])[i])

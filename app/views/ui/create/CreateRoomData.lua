@@ -73,10 +73,11 @@ function createData:getGameRule(tab)
     end
     --可抢杠
     if 2 == tab then
-        -- data.qiang_gang = boxlist[4][1]:isSelected()
         data.qiang_gang = self:isSelected(boxlist[4][1])
     elseif 1 == tab then
         data.qiang_gang = self:isSelected(boxlist[4][1])
+    elseif 3 == tab then
+        data.qiang_gang = self:isSelected(boxlist[5][1])    
     end
     data.find_bird  = 0
     data.type       = self.m_type or 1
@@ -98,6 +99,9 @@ function createData:getGameRule(tab)
             end
         end
     elseif 1 == tab then
+        if boxlist[7][1]:isSelected() then --一马全中
+            data.find_bird = 1
+        end
         for k,box in ipairs(boxlist[6]) do
             if box:isSelected() then
                 data.find_bird = k*2
@@ -123,6 +127,15 @@ function createData:getGameRule(tab)
         --         end
         --     end
         -- end
+    elseif 3 == tab then
+         if boxlist[8][1]:isSelected() then --爆炸马
+            data.find_bird = 1
+        end
+        for k,box in ipairs(boxlist[9]) do
+            if box:isSelected() then
+                data.find_bird = k*2
+            end
+        end       
     else
         for k,box in ipairs(boxlist[5]) do
             if box:isSelected() then
@@ -143,8 +156,22 @@ function createData:getGameRule(tab)
             data.find_bird = 1
         end
     elseif 3 == tab then
-        -- data.piao       = self:isSelected(boxlist[4][1])
-        -- data.goldbird   = self:isSelected(boxlist[4][4])
+        data.laizi      = not(self:isSelected(boxlist[3][1]))
+        data.baiban = self:isSelected(boxlist[3][2])
+        data.kaiwang = self:isSelected(boxlist[3][3])
+
+        data.no_wan = self:isSelected(boxlist[4][1])
+        data.no_feng = self:isSelected(boxlist[4][2])
+        data.all_card = self:isSelected(boxlist[4][3])
+
+        data.ming_gang = self:isSelected(boxlist[5][2])
+        data.qiang_gang_quanbao = self:isSelected(boxlist[6][1])
+        data.gang_bao_quanbao = self:isSelected(boxlist[6][2])
+
+        data.again_banker = self:isSelected(boxlist[7][1])
+        data.no_laizi_hu_4_point = self:isSelected(boxlist[7][2])
+        data.seven_hu_4_point = self:isSelected(boxlist[7][3])
+        data.seven_hu = true
     elseif 5 == tab then
         data.kaiwang = self:isSelected(boxlist[3][1])
         data.firstHu = self:isSelected(boxlist[3][2])
@@ -170,7 +197,7 @@ function createData:getGameRule(tab)
         data.no_feng = self:isSelected(boxlist[6][3])
         data.follow_point = self:isSelected(boxlist[8][2])
         if data.laizi == true then
-            data.no_laizi_double = true
+            data.seven_hu_4_point = true
         end
     end
     self:setGameTypeData(tab)

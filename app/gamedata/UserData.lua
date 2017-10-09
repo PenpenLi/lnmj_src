@@ -193,17 +193,26 @@ function UserData:setTableConfig(table_config)
         else
             UserData:setRule("无鬼")
         end
+    elseif (UserData.curMahjongType == 3)then
+        if temp.laizi then
+            if temp.baiban then
+                UserData:setRule("白板做鬼")
+            end
+        else
+            UserData:setRule("无鬼")
+        end
     else
         if temp.laizi then
             UserData:setRule("红中癞子")
         end
     end
-    if temp.seven_hu then
-        UserData:setRule("胡七对")
-    end
 
     if temp.kaiwang then
         UserData:setRule("翻鬼")
+    end
+
+    if temp.seven_hu then
+        UserData:setRule("胡七对")
     end
 
     if temp.firstHu then
@@ -232,7 +241,7 @@ function UserData:setTableConfig(table_config)
         end
     end
     if temp.bird_point ~= nil and temp.bird_point > 0 then
-        UserData:setRule( "鸟" .. temp.bird_point .. "分")
+        UserData:setRule( "码" .. temp.bird_point .. "分")
     end
 
     if temp.goldbird then
@@ -275,23 +284,32 @@ function UserData:getShareDesc(data)
        txt = txt .."飘 "
     end
     if(UserData.curMahjongType == 2)then
-        if temp.baiban then
-            txt = txt .."白板做鬼"
+        if temp.laizi then
+            if temp.baiban then
+                txt = txt .."白板做鬼 "
+            end
+        else
+            txt = txt .."无鬼 "
         end
+    elseif(UserData.curMahjongType == 3)then
+        if temp.laizi then
+            if temp.baiban then
+                txt = txt .."白板做鬼 "
+            end
+        else
+            txt = txt .."无鬼 "
+        end    
     else
         if temp.laizi then
             txt = txt .."红中癞子 "
         end
     end
-
-    if temp.seven_hu then
-       txt = txt .."胡七对 "
-    end
-
     if temp.kaiwang then
         txt = txt .."翻鬼 "
     end
-
+    if temp.seven_hu then
+       txt = txt .."胡七对 "
+    end
     if temp.firstHu then
         txt = txt .."起手胡 "
     end
@@ -319,7 +337,7 @@ function UserData:getShareDesc(data)
     end
 
     if temp.bird_point ~= nil and temp.bird_point > 0 then
-        txt = txt .."鸟" .. temp.bird_point .. "分 "
+        txt = txt .."码" .. temp.bird_point .. "分 "
     end
 
     if temp.goldbird then
@@ -345,6 +363,16 @@ function UserData:isLaizi()
         else
             return false
         end
+    elseif self.isChenZhou() then
+        if self.table_config then
+            if self.table_config.rule.laizi then
+                if self.table_config.rule.baiban then
+                    return true
+                end
+            end
+        else
+            return false
+        end     
     else
         if self.table_config then
             return self.table_config.rule.laizi or self.table_config.rule.hongzhong
@@ -366,6 +394,20 @@ function UserData:getTotalCardNum()
         else --带风
             return 136
         end
+    elseif self.isChenZhou() then
+        if self.table_config.rule.no_feng == true then --不带风
+            if self:isLaizi() then --有鬼牌
+                return 112
+            else --无鬼牌
+                return 108
+            end
+        else --带风
+            if self.table_config.rule.no_wan == true then
+                return 100
+            else
+                return 136
+            end
+        end       
     else
         if self.table_config.player_count < 3 then
             return 64
@@ -598,6 +640,16 @@ function UserData:getLaiziId()
             return UserData.laiziCardId
         end
         return 0
+    elseif self.isChenZhou() then
+        if self.table_config.rule.laizi then
+            if self.table_config.rule.baiban then
+                return 47
+            end
+        end
+        if UserData.laiziCardId then
+            return UserData.laiziCardId
+        end
+        return 0    
     else
         if UserData:isLaizi() then
             return 45

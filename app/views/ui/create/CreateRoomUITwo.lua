@@ -13,7 +13,7 @@ CreateRoomUITwo.RESOURCE_MODELNAME = "app.views.ui.create.CreateRoomModel"
 local RoomTabBtn = require "app.views.ui.create.RoomTabBtn"
 -- local RoomTabBtn = import(".RoomTabBtn")
 
-local tabNum = 5
+local tabNum = 4
 local function setSelected(btn,isSelect,custom)
     local image = helper.findNodeByName(btn:getParent(),"item_img")
     local label = helper.findNodeByName(btn:getParent(),"item_lab")
@@ -75,7 +75,7 @@ function CreateRoomUITwo:onCreate(clubData)
     --1转转 2推倒胡 3肇庆麻将 4红中 5广东鸡胡 
     --顺序
     --local tab_seq_list = {1, 5, 2, 4, 3}
-    local tab_seq_list = {1, 2, 3, 4, 5}
+    local tab_seq_list = {1, 2, 3, 4}
     for _, v in pairs(tab_seq_list) do
         self.list_tab:pushBackCustomItem(self["tab_btn_"..v])
     end
@@ -287,7 +287,7 @@ function CreateRoomUITwo:tabSelect( index )
                     item:setVisible(false)
                 end
                 panel_click:addClickEventListener(function(sender)self:onCheckHandler(sender)end)
-                if(tmp[j][2] and tmp[j][2] == "鸟2分" or tmp[j][2] ==  "金鸟")then
+                if(tmp[j][2] and tmp[j][2] == "码2分" or tmp[j][2] ==  "金鸟")then
                     if 1 == self.m_select_tab then
                         self.m_ckBoxList[5][4] = cb
                         self.m_ckBoxListPanel[5][4] =panel_click
@@ -337,6 +337,7 @@ function CreateRoomUITwo:checkPlayerNum()
         setSelected(self.m_ckBoxList[6][1],false)
         setSelected(self.m_ckBoxList[6][2],false)
         setSelected(self.m_ckBoxList[6][3],false)
+        setSelected(self.m_ckBoxList[7][1],false)
     end
     --转转二人不能选红中癞子
     if self.m_ckBoxList[2][3] and self.m_select_tab ~= 2 then
@@ -344,12 +345,14 @@ function CreateRoomUITwo:checkPlayerNum()
         self.m_ckBoxListPanel[6][1]:setTouchEnabled(not self.m_ckBoxList[2][3]:isSelected())
         self.m_ckBoxListPanel[6][2]:setTouchEnabled(not self.m_ckBoxList[2][3]:isSelected())
         self.m_ckBoxListPanel[6][3]:setTouchEnabled(not self.m_ckBoxList[2][3]:isSelected())
+        self.m_ckBoxListPanel[7][1]:setTouchEnabled(not self.m_ckBoxList[2][3]:isSelected())
 
         self:setEnabled(self.m_ckBoxList[5][3],not self.m_ckBoxList[2][3]:isSelected())
         -- self.m_ckBoxList[4][3]:setEnabled(not self.m_ckBoxList[2][3]:isSelected())
         self.m_ckBoxList[6][3]:setEnabled(not self.m_ckBoxList[2][3]:isSelected())
         self.m_ckBoxList[6][2]:setEnabled(not self.m_ckBoxList[2][3]:isSelected())
         self.m_ckBoxList[6][1]:setEnabled(not self.m_ckBoxList[2][3]:isSelected())
+        self.m_ckBoxList[7][1]:setEnabled(not self.m_ckBoxList[2][3]:isSelected())
     end
     
     self:checkBird()
@@ -383,7 +386,7 @@ function CreateRoomUITwo:checkBird()
         if self.m_ckBoxListPanel[5][4] then
             self.m_ckBoxListPanel[5][4]:setTouchEnabled(selected)
         end
-    elseif 2 == self.m_select_tab then
+    elseif 2 == self.m_select_tab or 3 == self.m_select_tab then
 
     else
         for k,btn in ipairs(self.m_ckBoxList[5]) do
@@ -603,8 +606,8 @@ function CreateRoomUITwo:checkList1or2(i,j)
 end
 
 function CreateRoomUITwo:checkList3(i,j)
-    --print("checkList3")
-    --print("i="..i.."  j="..j)
+    print("checkList3")
+    print("i="..i.."  j="..j)
     local btn = self.m_ckBoxList[i][j]
     if 4 == self.m_select_tab then
         if 2 == j or 3 == j then
@@ -624,9 +627,13 @@ function CreateRoomUITwo:checkList3(i,j)
             end
         end
         if 1 == self.m_select_tab then
+            --点炮胡，可抢明杠
             self:setEnabled(self.m_ckBoxList[4][2], isSelected(self.m_ckBoxList[4][1]) and isSelected(self.m_ckBoxList[3][2]))
         elseif 2 == self.m_select_tab then
-            self:setEnabled(self.m_ckBoxList[4][2], isSelected(self.m_ckBoxList[4][1]))
+            setSelected(self.m_ckBoxList[i][1],btn == self.m_ckBoxList[i][1])
+            setSelected(self.m_ckBoxList[i][2],btn == self.m_ckBoxList[i][2])
+            setSelected(self.m_ckBoxList[i][3],btn == self.m_ckBoxList[i][3])
+        elseif 3 == self.m_select_tab then
             setSelected(self.m_ckBoxList[i][1],btn == self.m_ckBoxList[i][1])
             setSelected(self.m_ckBoxList[i][2],btn == self.m_ckBoxList[i][2])
             setSelected(self.m_ckBoxList[i][3],btn == self.m_ckBoxList[i][3])
@@ -637,6 +644,7 @@ end
 function CreateRoomUITwo:checkList5_tuidaohu(i,j)
     local btn = self.m_ckBoxList[i][j]
     setSelected(btn,not helper.findNodeByName(btn,"tick"):isVisible(), true)
+    self:setEnabled(self.m_ckBoxList[5][1], isSelected(self.m_ckBoxList[4][1]))
 end
 
 function CreateRoomUITwo:checkList6_tuidaohu(i,j)
@@ -644,9 +652,28 @@ function CreateRoomUITwo:checkList6_tuidaohu(i,j)
     setSelected(btn,not helper.findNodeByName(btn,"tick"):isVisible(), true)
 end
 
+function CreateRoomUITwo:checkList5_zhaoqing(i,j)
+    local btn = self.m_ckBoxList[i][j]
+    setSelected(btn,not helper.findNodeByName(btn,"tick"):isVisible(), true)
+    self:setEnabled(self.m_ckBoxList[5][2], isSelected(self.m_ckBoxList[5][1]))
+    self:setEnabled(self.m_ckBoxList[6][1], isSelected(self.m_ckBoxList[5][1]))
+end
+
+function CreateRoomUITwo:checkList6_zhaoqing(i,j)
+    local btn = self.m_ckBoxList[i][j]
+    setSelected(btn,not helper.findNodeByName(btn,"tick"):isVisible(), true)
+    self:setEnabled(self.m_ckBoxList[6][1], isSelected(self.m_ckBoxList[5][1]))
+end
+
+function CreateRoomUITwo:checkList7_zhaoqing(i,j)
+    local btn = self.m_ckBoxList[i][j]
+    setSelected(btn,not helper.findNodeByName(btn,"tick"):isVisible(), true)
+end
+
+
 function CreateRoomUITwo:checkList5(i,j)
-    --print("checkList5")
-    --print("i="..i.."  j="..j)
+    print("checkList5")
+    print("i="..i.."  j="..j)
     local ckPRule = self.m_ckBoxList[4][4]
     local btnIsSelect = self.m_ckBoxList[i][j]:isSelected()
     if btnIsSelect then
@@ -660,11 +687,15 @@ function CreateRoomUITwo:checkList5(i,j)
         setSelected(self.m_ckBoxList[i-1][1], false)
     end
 
+    if 1 == self.m_select_tab then
+        setSelected(self.m_ckBoxList[i+1][1], false)
+    end
+
     self:checkBird()
 end
 
 function CreateRoomUITwo:checkList4(i,j)
-    --print("checkList4") 
+    print("checkList4") 
     if 6 == self.m_select_tab or 4 == self.m_select_tab then
         local btnIsSelect = self.m_ckBoxList[i][j]:isSelected()
         if btnIsSelect then
@@ -685,7 +716,7 @@ function CreateRoomUITwo:checkList4(i,j)
 end
 
 function CreateRoomUITwo:checkList7(i,j)
-    --print("checkList7 i="..i.."  j="..j)
+    print("checkList7 i="..i.."  j="..j)
     local ckPRule = self.m_ckBoxList[i][j]
     local btnIsSelect = self.m_ckBoxList[i][j]:isSelected()
     if btnIsSelect then
@@ -697,6 +728,12 @@ function CreateRoomUITwo:checkList7(i,j)
     end
     if 2 == self.m_select_tab then
         setSelected(self.m_ckBoxList[i+1][1], false)
+    end
+
+    if 1 == self.m_select_tab then
+        setSelected(self.m_ckBoxList[i-1][1], false)
+        setSelected(self.m_ckBoxList[i-1][2], false)
+        setSelected(self.m_ckBoxList[i-1][3], false)     
     end
 
     --self:checkBird()
@@ -726,10 +763,29 @@ function CreateRoomUITwo:checkList8(i,j)
         setSelected(self.m_ckBoxList[i-1][2], false)
         setSelected(self.m_ckBoxList[i-1][3], false)
     end
-
+   if 3 == self.m_select_tab then
+        setSelected(self.m_ckBoxList[i+1][1], false)
+        setSelected(self.m_ckBoxList[i+1][2], false)
+        setSelected(self.m_ckBoxList[i+1][3], false)
+    end
     --self:checkBird()
 end
 
+function CreateRoomUITwo:checkList9(i,j)
+    print("checkList9 i="..i.."  j="..j)
+    if self.m_select_tab == 3 then
+        local ckPRule = self.m_ckBoxList[i][j]
+        local btnIsSelect = self.m_ckBoxList[i][j]:isSelected()
+        if btnIsSelect then
+            setSelected(self.m_ckBoxList[i][j],false)
+        else
+            for k,btn in ipairs(self.m_ckBoxList[i]) do
+                setSelected(btn,k == j)
+            end
+        end
+        setSelected(self.m_ckBoxList[i-1][1], false)
+    end
+end
 -- function CreateRoomUITwo:onCheckHandler(sender)
 --     for i,data in ipairs(self.m_ckBoxListPanel) do
 --         for j,btn in ipairs(data) do
@@ -761,9 +817,9 @@ end
 -- end
 
 function CreateRoomUITwo:onCheckHandler(sender)
-    --print("==onCheckHandler==")
+    print("==onCheckHandler==")
     for i,data in ipairs(self.m_ckBoxListPanel) do
-        --print("i"..i)
+        print("i"..i)
         for j,btn in ipairs(data) do
             if btn == sender then
                 if i == 1 or i == 2 then
@@ -774,25 +830,39 @@ function CreateRoomUITwo:onCheckHandler(sender)
                 elseif i == 5 and j~=4 and 1 ~= self.m_select_tab then
                     if self.m_select_tab == 2 then
                         self:checkList5_tuidaohu(i,j)
+                    elseif self.m_select_tab == 3 then
+                        self:checkList5_zhaoqing(i,j)
                     else
                         self:checkList5(i,j)
                     end
                 elseif i == 6 and j~= 4 then
                     if self.m_select_tab == 2 then
                         self:checkList6_tuidaohu(i,j)
+                    elseif self.m_select_tab == 3 then
+                        self:checkList6_zhaoqing(i,j)
                     else
                         self:checkList5(i,j)
                     end
                 elseif i == 7 then
-                    self:checkList7(i,j)
+                    if self.m_select_tab == 3 then
+                        self:checkList7_zhaoqing(i,j)
+                    else
+                        self:checkList7(i,j)
+                    end
                 elseif i == 8 then
                     self:checkList8(i,j)
+                elseif i == 9 then
+                    self:checkList9(i,j)
                 else
                     local tick = helper.findNodeByName(self.m_ckBoxList[i][j],"tick")
                     if tick then
                         setSelected(self.m_ckBoxList[i][j],not tick:isVisible(), true)
                         if 1 == self.m_select_tab then
                             self:setEnabled(self.m_ckBoxList[4][2], isSelected(self.m_ckBoxList[4][1]) and isSelected(self.m_ckBoxList[3][2]))
+                        end
+                        if 2 == self.m_select_tab then
+                            self:setEnabled(self.m_ckBoxList[4][2], isSelected(self.m_ckBoxList[4][1]))
+                            self:setEnabled(self.m_ckBoxList[5][1], isSelected(self.m_ckBoxList[4][1]))
                         end
                     else
                         self:checkList4(i,j)

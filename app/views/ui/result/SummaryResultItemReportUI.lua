@@ -25,15 +25,15 @@ function SummaryResultItemReportUI:onCreate()
         self.hb_num = helper.findNodeByName(self.resourceNode_, "hb_num")
         self.hb_act_node = helper.findNodeByName(self.resourceNode_,"hb_act_node")
         self.money_node = helper.findNodeByName(self.resourceNode_,"money_node")
-    if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() or UserData:isChangSha() or UserData:isNingXiang() then
-        self.layoutZhuanZhuan:setVisible(true)
-        self.layoutChangSha:setVisible(false)
-        self.txZiMoCount = helper.findNodeByName(self.resourceNode_,"txZiMoCount");
-        self.txJiePaoCount = helper.findNodeByName(self.resourceNode_,"txJiePaoCount");
-        self.txDianPaoCount = helper.findNodeByName(self.resourceNode_,"txDianPaoCount");
-        self.txAnGangCount = helper.findNodeByName(self.resourceNode_,"txAnGangCount");
-        self.txMingGangCount = helper.findNodeByName(self.resourceNode_,"txMingGangCount");
-    end
+        if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() or UserData:isChangSha() or UserData:isNingXiang() then
+            self.layoutZhuanZhuan:setVisible(true)
+            self.layoutChangSha:setVisible(false)
+            self.txZiMoCount = helper.findNodeByName(self.resourceNode_,"txZiMoCount");
+            self.txJiePaoCount = helper.findNodeByName(self.resourceNode_,"txJiePaoCount");
+            self.txDianPaoCount = helper.findNodeByName(self.resourceNode_,"txDianPaoCount");
+            self.txAnGangCount = helper.findNodeByName(self.resourceNode_,"txAnGangCount");
+            self.txMingGangCount = helper.findNodeByName(self.resourceNode_,"txMingGangCount");
+        end
     -- elseif UserData:isChangSha() or UserData:isNingXiang() then
     --     self.layoutZhuanZhuan:setVisible(false)
     --     self.layoutChangSha:setVisible(true)

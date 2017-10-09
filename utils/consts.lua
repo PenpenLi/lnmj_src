@@ -245,7 +245,8 @@ consts.roomCreateMsg.tab_1 =
     {"玩法:",{1,"点炮胡","createWin1"},{1,"自摸胡","createWin2"},nil},
     {"",{2,"抢杠胡","createWin3"},{2,"可抢明杠","createWin5"}, nil},
     {"",{2,"庄闲算分","createCon1"},{2,"可胡七对","createCon2"},{2,"红中癞子","createCon3"}},
-    {"抓鸟:",{1,"抓2鸟","createPick2"},{1,"抓4鸟","createPick4"},{1,"抓6鸟","createPick6"},{2,"鸟2分","createCoin2"}},
+    {"扎码:",{1,"扎2码","createPick2"},{1,"扎4码","createPick4"},{1,"扎6码","createPick6"}},
+    {"",{1,"一码全中","createma2"},{2}}
 }
 
 --推倒胡
@@ -262,15 +263,26 @@ consts.roomCreateMsg.tab_2 =
 }
 
 --肇庆
+-- consts.roomCreateMsg.tab_3 =
+-- {
+--     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
+--     {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},
+--     {"玩法:",{2,"红中癞子","createCon3"},{2,"荒庄荒杠","createCon8"},{2}},
+--     {"扎码:",{1,"一码全中","yimaquanzhong"}},
+--     {"",{1,"扎2码","createma2"},{1,"扎4码","createma4"},{1,"扎6码","createma6"}}
+-- }
 consts.roomCreateMsg.tab_3 =
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
     {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},
-    {"玩法:",{2,"红中癞子","createCon3"},{2,"荒庄荒杠","createCon8"},{2}},
-    {"扎码:",{1,"一码全中","yimaquanzhong"}},
-    {"",{1,"扎2码","createma2"},{1,"扎4码","createma4"},{1,"扎6码","createma6"}}
+    {"玩法:",{1,"无鬼","createCon6"},{1,"白板做鬼","createCon6"},{1,"翻鬼","createCon6"}},
+    {"",{1,"不带万子","createCon6"},{1,"不带风","createCon6"},{1,"全子","createCon6"}},
+    {"",{2,"抢杠胡","createWin3"},{2,"可抢明杠","createWin5"}},
+    {"",{2,"抢杠全包","createCon3"},{2,"杠爆全包","createCon3"}},
+    {"",{2,"连庄","createCon3"},{2,"无鬼加倍","createCon3"},{2,"七对加倍","createCon2"}},
+    {"买马:",{1,"爆炸马","yimaquanzhong"}},
+    {"",{1,"买2马","createma2"},{1,"买4马","createma4"},{1,"买6马","createma6"}}
 }
-
 --红中
 consts.roomCreateMsg.tab_4 =
 {
