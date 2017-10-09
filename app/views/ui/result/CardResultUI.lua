@@ -416,9 +416,9 @@ end
 function CardResultUI:getHuDescriStr(play,i)
     local playOthertypeStr=""
     if UserData:isZhuanZhuan() then
-        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getAgainBanker(play.againBanker)..self:getGangType(play.gangType)..self:getBirdCount(i)
     elseif UserData:isChenZhou() then
-        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getAgainBanker(play.againBanker)..self:getGangType(play.gangType)..self:getBirdCount(i)
         if play.piaoPoint then
             playOthertypeStr = playOthertypeStr.."飘"..play.piaoPoint.."分"
         end
@@ -444,9 +444,9 @@ function CardResultUI:getHuDescriStr(play,i)
         if (UserData:isHongZhong() or UserData:isChangDe()) and 1 == UserData.table_config.rule.find_bird then
             extraStr = ""
         end
-        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..extraStr..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getAgainBanker(play.againBanker)..self:getGangType(play.gangType)..extraStr..self:getBirdCount(i)
     else
-        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getGangType(play.gangType)..self:getBirdCount(i)
+        playOthertypeStr = self:getHutype(play.huType)..self:getHuName(play.fanType)..self:getSevenDouble(play.sevenDouble)..self:getNoLaiziDouble(play.noLaiziDouble)..self:getAgainBanker(play.againBanker)..self:getGangType(play.gangType)..self:getBirdCount(i)
     end
     -- elseif UserData:isChangSha() or UserData:isNingXiang() then
     --     local first_hu
@@ -590,6 +590,23 @@ function CardResultUI:getNoLaiziDouble(noLaiziDouble)
     end
     return ""
 end
+
+function CardResultUI:getAgainBanker(againBanker)
+    if againBanker == nil then
+        return ""
+    end
+    if UserData:isChenZhou() then
+        if againBanker == 1 then
+            return "连庄"..TSpace
+        end
+    else
+        if againBanker == 1 then
+            return "节节高"..TSpace
+        end
+    end
+    return ""
+end
+
 function CardResultUI:getHutype(hutype)
     if UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isHongZhong() or UserData:isChangDe() then
         --#1:自摸、2:接炮、3:抢杠胡,4:放炮、5:被抢杠  0:没胡
@@ -682,11 +699,23 @@ function CardResultUI:getBirdCount(chair_id)
                         return "中马X"..(UserData.cardResult.birdCard[1] % 10)
                     end
                 else
-                    if UserData.cardResult.birdCard[1] >= 41 then --风牌一个10马
-                        return "中马X10"
-                    else
-                        return "中马X"..(UserData.cardResult.birdCard[1] % 10)
-                    end    
+                    if UserData:isChenZhou() then --肇庆
+                        if UserData.cardResult.birdCard[1] >= 41 then --风牌一个10马
+                            return "中马X5"
+                        else
+                            if UserData.cardResult.birdCard[1] == 11 or UserData.cardResult.birdCard[1] == 21 or UserData.cardResult.birdCard[1] == 31 then
+                                return "中马X10"
+                            else
+                                return "中马X"..(UserData.cardResult.birdCard[1] % 10)
+                            end
+                        end  
+                    else --推倒胡
+                        if UserData.cardResult.birdCard[1] >= 41 then --风牌一个10马
+                            return "中马X10"
+                        else
+                            return "中马X"..(UserData.cardResult.birdCard[1] % 10)
+                        end  
+                    end  
                 end
             else
                 return "中马X"..self.bridCount

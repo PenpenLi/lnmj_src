@@ -276,11 +276,10 @@ consts.roomCreateMsg.tab_3 =
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
     {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},
     {"玩法:",{1,"无鬼","createCon6"},{1,"白板做鬼","createCon6"},{1,"翻鬼","createCon6"}},
-    {"",{1,"不带万子","createCon6"},{1,"不带风","createCon6"},{1,"全子","createCon6"}},
-    {"",{2,"抢杠胡","createWin3"},{2,"可抢明杠","createWin5"}},
-    {"",{2,"抢杠全包","createCon3"},{2,"杠爆全包","createCon3"}},
-    {"",{2,"连庄","createCon3"},{2,"无鬼加倍","createCon3"},{2,"七对加倍","createCon2"}},
-    {"买马:",{1,"爆炸马","yimaquanzhong"}},
+    {"",{1,"无万子","createCon6"},{1,"无番子","createCon6"},{1,"全子","createCon6"}},
+    {"",{2,"抢杠胡","createWin3"},{2,"抢杠全包","createWin5"},{2,"杠爆全包","createCon3"}},
+    {"",{2,"连庄","createCon3"},{2,"无鬼2倍","createCon3"},{2,"七对2倍","createCon2"}},
+    {"买马:",{1,"数字1马","yimaquanzhong"}},
     {"",{1,"买2马","createma2"},{1,"买4马","createma4"},{1,"买6马","createma6"}}
 }
 --红中

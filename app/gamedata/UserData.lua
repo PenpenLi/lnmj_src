@@ -176,8 +176,10 @@ function UserData:setTableConfig(table_config)
     if temp.qiang_gang then
         UserData:setRule("抢杠胡")
     end
-    if temp.ming_gang then
-        UserData:setRule("可抢明杠")
+    if UserData.curMahjongType ~= 3 then
+        if temp.ming_gang then
+            UserData:setRule("可抢明杠")
+        end
     end
     if temp.idle then
         UserData:setRule("庄闲算分")
@@ -211,8 +213,10 @@ function UserData:setTableConfig(table_config)
         UserData:setRule("翻鬼")
     end
 
-    if temp.seven_hu then
-        UserData:setRule("胡七对")
+    if UserData.curMahjongType ~= 3 then
+        if temp.seven_hu then
+            UserData:setRule("胡七对")
+        end
     end
 
     if temp.firstHu then
@@ -234,7 +238,11 @@ function UserData:setTableConfig(table_config)
     else
         if temp.find_bird ~= nil and temp.find_bird > 0 then
             if 1 == temp.find_bird then
-                UserData:setRule("爆炸马")
+                if UserData:isChenZhou() then
+                    UserData:setRule("数字1马")
+                else
+                    UserData:setRule("爆炸马")
+                end
             else
                 UserData:setRule("买" .. temp.find_bird .. "马")
             end
@@ -250,6 +258,10 @@ function UserData:setTableConfig(table_config)
 
     if temp.huangzhuang then
         UserData:setRule("荒庄荒杠")
+    end
+
+    if temp.again_banker then
+        UserData:setRule("连庄")
     end
 
     UserData.table_config.rule_txt = string.sub(UserData.table_config.rule_txt, 1, (#UserData.table_config.rule_txt - 1))
@@ -274,8 +286,10 @@ function UserData:getShareDesc(data)
     if temp.qiang_gang then
         txt = txt .."抢杠胡 "
     end
-    if temp.ming_gang then
-        txt = txt .."可抢明杠 "
+    if(UserData.curMahjongType ~= 3)then
+        if temp.ming_gang then
+            txt = txt .."可抢明杠 "
+        end
     end
     if temp.idle then
        txt = txt .."庄闲算分 "
@@ -307,9 +321,12 @@ function UserData:getShareDesc(data)
     if temp.kaiwang then
         txt = txt .."翻鬼 "
     end
-    if temp.seven_hu then
-       txt = txt .."胡七对 "
+    if UserData.curMahjongType ~= 3 then
+        if temp.seven_hu then
+           txt = txt .."胡七对 "
+        end
     end
+ 
     if temp.firstHu then
         txt = txt .."起手胡 "
     end
@@ -329,7 +346,11 @@ function UserData:getShareDesc(data)
     else
          if temp.find_bird ~= nil and temp.find_bird > 0 then
             if 1 == temp.find_bird then
-                txt = txt .."爆炸马 "
+                if UserData:isChenZhou() then
+                    txt = txt .."数字1马 "
+                else
+                    txt = txt .."爆炸马 "
+                end
             else
                 txt = txt .."买" .. temp.find_bird .. "马 "
             end
@@ -348,6 +369,10 @@ function UserData:getShareDesc(data)
         txt = txt .."荒庄荒杠 "
     end
     
+    if temp.again_banker then
+        txt = txt .."连庄 "
+    end
+
     return txt
 end
 

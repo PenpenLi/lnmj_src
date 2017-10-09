@@ -495,7 +495,8 @@ game_hu_card 3009 {
   piaoPoint     8 : integer             #飘得失分
   fanType 9 : integer               #胡牌番类(1:平胡 2:七对)    
   sevenDouble 10 : integer          #七对加倍
-  noLaiziDouble 11 : integer        #无鬼加倍                                         
+  noLaiziDouble 11 : integer        #无鬼加倍  
+  againBanker 12 : integer          #连庄                                       
 }
 
 .changsha_player_balance_info {
