@@ -276,7 +276,7 @@ function GameMainUI:queryIsAgent()
 
         if response and (response.status == 1 or response.errCode == 0) then
             --UIMgr:showTips("问题已成功提交，谢谢您宝贵的建议!")
-            if response.data.agentType == "1" or response.data.agentType == "2" or response.data.agentType == "3" then
+            if response.data.agentType == "1" or response.data.agentType == "2" then
                 self.mainGiveCardBtn:setVisible(true)
                 print("self.mainGiveCardBtn:setVisible(true)")
             else
