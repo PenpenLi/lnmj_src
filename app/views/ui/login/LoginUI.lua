@@ -204,6 +204,7 @@ function LoginUI:onLogin(event)
         if uid == nil or CC_PACKET_VERSION ~= 1 then
             if device.platform=="android" or device.platform=="ios" then
                 if LocalData.data.thirdLoginData then
+                    print("LocalData.data.thirdLoginData===========")
                     dump(LocalData.data.thirdLoginData)
                     self:onThirdLogin(LocalData.data.thirdLoginData)
                 else

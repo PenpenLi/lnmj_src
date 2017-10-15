@@ -62,7 +62,6 @@ function HttpServiers:queryqFankuiResult(params,callback)
    return HttpClient:asyncGet(consts.HttpUrl.getFankuiResult, params,callback)
 end
 
-
 --活动公告，系统公告，游戏消息，玩法列表
 function HttpServiers:queryArticleList(params,callback)
    return HttpClient:asyncGet(consts.HttpUrl.getArticleList, params,callback)
@@ -121,6 +120,11 @@ end
 --房卡转让
 function HttpServiers:cardGive(params,callback)
    return HttpClient:asyncGet(consts.HttpUrl.exchangeCards, params,callback)
+end
+
+--设置激活码
+function HttpServiers:setActivationCode(params,callback)
+return HttpClient:asyncGet(consts.HttpUrl.setActivationCode, params,callback)
 end
 
 return HttpServiers

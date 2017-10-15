@@ -7,6 +7,7 @@ local PlayerInfoUI = require(consts.UI.PlayerInfoUI);
 local AnimationView = require("utils.extends.AnimationView")
 GameMainUI.RESOURCE_FILENAME = "UI_Main.csb"
 GameMainUI.RESOURCE_MODELNAME = "app.views.ui.main.GameMainModel"
+--local ActivateUI = require(consts.UI.ActivateUI)
 
 function GameMainUI:PrintTable( tbl , level, filteDefault)
   local msg = ""
@@ -206,6 +207,7 @@ function GameMainUI:onCreate()
             image:setPosition(cc.p(self.mainIcon:getContentSize().width / 2, self.mainIcon:getContentSize().height / 2))
             image:setImageContentSize(cc.size(self.mainIcon:getContentSize().width-3, self.mainIcon:getContentSize().height-3))
             image:addTo(self.mainIcon)
+            print("image:addTo(self.mainIcon)")
          end
     end
     --BIHttpClient:postBIeventInfo(consts.BIeventType.page,consts.BIcurrentPath.indexPage)
@@ -265,6 +267,15 @@ function GameMainUI:onEnter()
     performWithDelay(self, handler(self,self.firstSendCard),.5)
     self:checkMail()
     self:queryIsAgent()
+
+    print("UIMgr:openUI(consts.UI.ActivateUI)=======")
+    if  tonumber(UserData.userInfo.activationCode) == 0 then
+        --弹窗
+        print("UIMgr:openUI(consts.UI.ActivateUI)")
+        --UIMgr:openUI(consts.UI.ActivateUI)
+        performWithDelay(self, handler(self,self.showActivationBox),.5)
+    end
+
 end
 
 function GameMainUI:queryIsAgent()
@@ -279,7 +290,13 @@ function GameMainUI:queryIsAgent()
             if response.data.agentType == "1" or response.data.agentType == "2" then
                 self.mainGiveCardBtn:setVisible(true)
                 print("self.mainGiveCardBtn:setVisible(true)")
+                UserData.isActivation = true
             else
+                if response.data.agentType == "3" then --3级推广员
+                    UserData.isActivation = true
+                else
+                    UserData.isActivation = false
+                end
                 self.mainGiveCardBtn:setVisible(false)
                 print("self.mainGiveCardBtn:setVisible(false)")
             end
@@ -315,6 +332,11 @@ function GameMainUI:firstSendCard(  )
         UIMgr:showTips("首次登录赠送房卡"..UserData.userInfo.surplusGameCard.."张")
         UserData.userInfo.isNew = 0
     end
+end
+
+--输入激活码
+function GameMainUI:showActivationBox(  )
+    UIMgr:openUI(consts.UI.ActivationUI)
 end
 
 function GameMainUI:queryRoom()
@@ -359,7 +381,8 @@ function GameMainUI:onClickAvatar()
             ip = userInfo.ip,
             image_url = userInfo.avatar,
             uid = userInfo.userId,
-            gender = userInfo.gender
+            gender = userInfo.gender,
+            activationCode = userInfo.activationCode,
             })
     end
 end
@@ -407,10 +430,6 @@ function GameMainUI:onJoin()
     else
         UIMgr:openUI(consts.UI.joinRoomUI)
     end
-
-    --UIMgr:openUI(consts.UI.SummaryResultUI)
-
-    --UIMgr:openUI(consts.UI.cardResultUI)
 end
 
 function GameMainUI:onBuy()
