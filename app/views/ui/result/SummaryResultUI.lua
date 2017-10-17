@@ -170,6 +170,10 @@ function SummaryResultUI:updateWinnerFlag(maxPoint)
     local winner = UserData.game_balance_result.win
     for i = 1, #entity do
         self.uiList[i].sFlagWinner:setVisible(entity[i].uid == winner)
+        if entity[i].uid == UserData.uid and winner == UserData.uid then
+            --如果自己是大赢家，则上报
+            self:setWinnerLog(maxPoint)
+        end
     end
 
     --分数都为0，没有大赢家
@@ -185,6 +189,10 @@ function SummaryResultUI:updateWinnerFlag(maxPoint)
         if entity[i].uid ~= winner then --上面已经设置了
             if entity[i].point == maxPoint then
                 self.uiList[i].sFlagWinner:setVisible(true)
+                if entity[i].uid == UserData.uid then
+                    --如果自己是大赢家，则上报
+                    self:setWinnerLog(entity[i].point)
+                end
             end
         end
     end
@@ -434,6 +442,39 @@ function SummaryResultUI:onClose(sender)
     -- body
     print("onSummaryResultUIClick")
     self:close()
+end
+
+function SummaryResultUI:setWinnerLog(point)
+    if point == 0 then
+        return
+    end
+    local activationCode = 0
+    if UserData.userInfo.activationCode == nil then
+        activationCode = 0
+    end
+    local sendData = {userId =  UserData.uid,
+                    nickName = UserData.userInfo.nickName,
+                    appId = consts.appId,
+                    appCode = consts.appCode,
+                    point = point,
+                    activationCode = activationCode,
+                    token = UserData.userInfo.token
+    }
+    print("=========================")
+    dump(sendData)
+    HttpServiers:setWinnerLog(sendData,
+        function(entity,response,statusCode)
+            if response and (response.status == 1 or response.errCode == 0) then
+                print("发送发赢家数据")
+                --UserData.userInfo.activationCode =  response.data.activationCode    
+                --self:onClose()
+                --return
+            else
+                --return
+                --UIMgr:showTips(response.error)
+                print("错误码：",response.errCode,"错误信息：",response.error)
+            end
+        end)
 end
 
 return SummaryResultUI

@@ -135,7 +135,8 @@ consts.HttpUrl = {
     redpackGetMoney = "/Redpackage/getMoneyByUsers",
     queryIsAgent = "/GameService/isAgent",
     exchangeCards = "/GameService/ExchangeCards",
-    setActivationCode = "/GameService/setActivationCode"
+    setActivationCode = "/GameService/setActivationCode",
+    setWinnerLog = "/statistics/setWinnerLog"
 }
 
 consts.GameHttpUrl = {
