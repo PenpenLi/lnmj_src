@@ -451,6 +451,8 @@ function SummaryResultUI:setWinnerLog(point)
     local activationCode = 0
     if UserData.userInfo.activationCode == nil then
         activationCode = 0
+    else
+        activationCode = UserData.userInfo.activationCode
     end
     local sendData = {userId =  UserData.uid,
                     nickName = UserData.userInfo.nickName,

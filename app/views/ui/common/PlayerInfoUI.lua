@@ -44,10 +44,10 @@ function PlayerInfoUI:show(playerInfo)
         border:addTo(image)
     end
 
-    if tonumber(playerInfo.activationCode) == 0 then
+    if tonumber(UserData.userInfo.activationCode) == 0 then
         self.txPlayerActivationCode:setVisible(false)
     else
-        self.txPlayerActivationCode:setString("激活码："..playerInfo.activationCode)
+        self.txPlayerActivationCode:setString("激活码："..UserData.userInfo.activationCode)
         self.txPlayerActivationCode:setVisible(true)
     end
 

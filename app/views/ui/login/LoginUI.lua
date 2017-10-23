@@ -242,7 +242,7 @@ function LoginUI:onGuestLogin(event)
         end
         local lenStr = string.sub(numStr,#numStr-7,#numStr)
         UserData.uid = tonumber(lenStr)
-        GnetMgr:initConnect("dlklmjtest.kuailai88.com", "18889",handler(self,self.onGuestConnectCB))
+        GnetMgr:initConnect("123.207.39.79", "18889",handler(self,self.onGuestConnectCB))
         UIMgr:showLoadingDialog("登录中...")
     else
         local dialogContentLabel1 = helper.createRichLabel({maxWidth = 600,fontSize = 30,fontColor = consts.ColorType.THEME})
