@@ -156,122 +156,255 @@ local table6 = {}
 
 
 
-function getNeedHunInSub( subArr, hNum , need_table)
-    callTime = callTime + 1
-    lArr = #subArr
-    if hNum + getModNeedNum(lArr,false) >= g_NeedHunCount then
-        return
+-- function getNeedHunInSub( subArr, hNum , need_table)
+--     callTime = callTime + 1
+--     lArr = #subArr
+--     if hNum + getModNeedNum(lArr,false) >= g_NeedHunCount then
+--         return
+--     end
+--     if lArr == 0 then
+--         g_NeedHunCount = math.min( hNum, g_NeedHunCount )
+--         return
+--     elseif lArr == 1 then
+--         g_NeedHunCount = math.min(hNum+2, g_NeedHunCount)
+--         return
+--     elseif lArr == 2 then
+--         t = math.floor(subArr[1] / 10)
+--         v0 = subArr[1] % 10
+--         v1 = subArr[2] % 10
+--         if t == 4 then -- 东南西北中发白（无顺）
+--             if v0 == v1 then
+--                 g_NeedHunCount = math.min( hNum+1, g_NeedHunCount )
+--                 return
+--             end
+--         elseif  (v1-v0) < 3 then
+--             g_NeedHunCount = math.min( hNum+1, g_NeedHunCount )
+--             return
+--         end
+--     elseif lArr >= 3 then -- 大于三张牌
+--         t  = math.floor(subArr[1] / 10)
+--         v0 = subArr[1] % 10
+--         v1 = subArr[2] % 10
+--         --第一个和另外两个一铺
+--         arrLen = #subArr
+--         for i = 2 , arrLen do
+--             local isgo = true
+--             if hNum + getModNeedNum(lArr-3,false) >= g_NeedHunCount then
+--                 isgo = false
+--             end
+--             v2 = subArr[i] % 10
+--             --13444   134不可能连一起
+--             if v1 - v0 > 1  then
+--                 break
+--             end
+--             if i+2 < arrLen and isgo then
+--                 if subArr[i+2]%10 == v1 then
+--                     isgo = false
+--                 end
+--             end
+--             if isgo and i < arrLen then
+--                 tmp1, tmp2, tmp3 = subArr[1],subArr[i],subArr[i+1]
+--                 if test3Combine( tmp1, tmp2, tmp3 ) then
+--                     table.insert(table1, table.remove(subArr, i+1))
+--                     table.insert(table1, table.remove(subArr, i))
+--                     table.insert(table1, table.remove(subArr, 1))
+--                     subLen = #subArr
+--                     getNeedHunInSub(subArr, hNum)
+--                     table.insert(subArr, table.remove(table1, #table1))
+--                     table.insert(subArr, table.remove(table1, #table1))
+--                     table.insert(subArr, table.remove(table1, #table1))
+--                     table.sort(subArr)
+--                 end
+--             end
+--         end
+--         -- 第一个和第二个一铺
+--         v1 = subArr[1] % 10
+--         if hNum + getModNeedNum(lArr-2,false) +1 < g_NeedHunCount then
+--             if t == 4 then -- 东南西北中发白（无顺）
+--                 if v0 == v1 then
+--                     tmp1 = subArr[1]
+--                     tmp2 = subArr[2]
+--                     table.insert(table2, table.remove(subArr, 2))
+--                     table.insert(table2, table.remove(subArr, 1))
+--                     getNeedHunInSub(subArr, hNum+1)
+--                     table.insert(subArr, table.remove(table2, #table2))
+--                     table.insert(subArr, table.remove(table2, #table2))
+--                     sortArr( subArr )
+--                 end
+--             else
+--                 arrLen = #subArr
+--                 for i = 2, arrLen do
+--                     local isgo = true
+--                     if hNum + getModNeedNum(lArr-2,false) +1  >= g_NeedHunCount then
+--                         isgo = false
+--                     end
+--                     v1 = subArr[i] % 10
+--                     --如果当前的value不等于下一个value则和下一个结合避免重复
+--                     if i == arrLen and isgo then
+--                         v2 = subArr[i-1] % 10
+--                         if v1 == v2 then
+--                             isgo = false
+--                         end
+--                     end
+-- --                    local mius = v1 - v0
+--                     local mius = subArr[i]%10 - subArr[1]%10
+--                     if  mius < 3 and isgo then
+--                         tmp1 = subArr[1]
+--                         tmp2 = subArr[i]
+--                         table.insert(table3, table.remove(subArr, i))
+--                         table.insert(table3, table.remove(subArr, 1))
+--                         getNeedHunInSub(subArr, hNum+1)
+--                         table.insert(subArr, table.remove(table3, #table3))
+--                         table.insert(subArr, table.remove(table3, #table3))
+--                         table.sort(subArr)
+--                     end
+--                 end
+--             end
+--         end
+--         -- 第一个自己一铺
+--         if  hNum + getModNeedNum(lArr-1,false)+2 < g_NeedHunCount then
+--             tmp = subArr[1]
+--             table.insert(table4, table.remove(subArr, 1))
+--             getNeedHunInSub( subArr, hNum + 2 )
+--             table.insert(subArr, table.remove(table4, #table4))
+--             table.sort(subArr)
+--         end
+--     else
+--         return
+--     end
+-- end
+
+function getNeedHunInSub(pai, needNum)
+    if g_NeedHunCount == 0 then
+        return 
     end
-    if lArr == 0 then
-        g_NeedHunCount = math.min( hNum, g_NeedHunCount )
+    local paiNum = #pai
+    if paiNum == 0 then
+        g_NeedHunCount = math.min(needNum, g_NeedHunCount)
         return
-    elseif lArr == 1 then
-        g_NeedHunCount = math.min(hNum+2, g_NeedHunCount)
-        return
-    elseif lArr == 2 then
-        t = math.floor(subArr[1] / 10)
-        v0 = subArr[1] % 10
-        v1 = subArr[2] % 10
-        if t == 4 then -- 东南西北中发白（无顺）
-            if v0 == v1 then
-                g_NeedHunCount = math.min( hNum+1, g_NeedHunCount )
-                return
+    elseif paiNum == 1 then
+        g_NeedHunCount = math.min(needNum + 2, g_NeedHunCount)
+        return 
+    elseif paiNum == 2 then
+        local pai_1 = pai[1]
+        local pai_2 = pai[2]
+        if math.ceil(pai_1 / 10) -1 == 4 then
+            if pai_1 == pai_2 then
+                g_NeedHunCount = math.min(needNum + 1, g_NeedHunCount)
+                return 
             end
-        elseif  (v1-v0) < 3 then
-            g_NeedHunCount = math.min( hNum+1, g_NeedHunCount )
-            return
+        elseif pai_2 - pai_1 < 3 then
+            g_NeedHunCount = math.min(needNum + 1, g_NeedHunCount)
+            return 
         end
-    elseif lArr >= 3 then -- 大于三张牌
-        t  = math.floor(subArr[1] / 10)
-        v0 = subArr[1] % 10
-        v1 = subArr[2] % 10
-        --第一个和另外两个一铺
-        arrLen = #subArr
-        for i = 2 , arrLen do
-            local isgo = true
-            if hNum + getModNeedNum(lArr-3,false) >= g_NeedHunCount then
-                isgo = false
+    end
+
+    local pai_1 = pai[1]
+    local pai_2 = pai[2]
+    local pai_3 = pai[3]
+
+    if needNum + 2 < g_NeedHunCount then
+        local tmpcard = m_table.clone(pai)
+        table.remove(tmpcard, 1)
+        getNeedHunInSub(tmpcard, needNum + 2)
+        -- table.insert(pai, 1, pai_1)
+    end
+
+    if needNum + 1 < g_NeedHunCount then
+        if math.ceil(pai_1 / 10) -1== 4 then
+            if pai_1 == pai_2 then
+                local tmpcard = m_table.clone(pai)
+                table.remove(tmpcard, 1)
+                table.remove(tmpcard, 1)
+                getNeedHunInSub(tmpcard, needNum + 1)
+                -- table.insert(pai, 1, pai_2)
+                -- table.insert(pai, 1, pai_1)
             end
-            v2 = subArr[i] % 10
-            --13444   134不可能连一起
-            if v1 - v0 > 1  then
-                break
-            end
-            if i+2 < arrLen and isgo then
-                if subArr[i+2]%10 == v1 then
-                    isgo = false
+        else
+            for i = 2, #pai do
+                if needNum + 1 > g_NeedHunCount then
+                    break
                 end
-            end
-            if isgo and i < arrLen then
-                tmp1, tmp2, tmp3 = subArr[1],subArr[i],subArr[i+1]
-                if test3Combine( tmp1, tmp2, tmp3 ) then
-                    table.insert(table1, table.remove(subArr, i+1))
-                    table.insert(table1, table.remove(subArr, i))
-                    table.insert(table1, table.remove(subArr, 1))
-                    subLen = #subArr
-                    getNeedHunInSub(subArr, hNum)
-                    table.insert(subArr, table.remove(table1, #table1))
-                    table.insert(subArr, table.remove(table1, #table1))
-                    table.insert(subArr, table.remove(table1, #table1))
-                    table.sort(subArr)
-                end
-            end
-        end
-        -- 第一个和第二个一铺
-        v1 = subArr[1] % 10
-        if hNum + getModNeedNum(lArr-2,false) +1 < g_NeedHunCount then
-            if t == 4 then -- 东南西北中发白（无顺）
-                if v0 == v1 then
-                    tmp1 = subArr[1]
-                    tmp2 = subArr[2]
-                    table.insert(table2, table.remove(subArr, 2))
-                    table.insert(table2, table.remove(subArr, 1))
-                    getNeedHunInSub(subArr, hNum+1)
-                    table.insert(subArr, table.remove(table2, #table2))
-                    table.insert(subArr, table.remove(table2, #table2))
-                    sortArr( subArr )
-                end
-            else
-                arrLen = #subArr
-                for i = 2, arrLen do
-                    local isgo = true
-                    if hNum + getModNeedNum(lArr-2,false) +1  >= g_NeedHunCount then
-                        isgo = false
-                    end
-                    v1 = subArr[i] % 10
-                    --如果当前的value不等于下一个value则和下一个结合避免重复
-                    if i == arrLen and isgo then
-                        v2 = subArr[i-1] % 10
-                        if v1 == v2 then
-                            isgo = false
+                pai_2 = pai[i]
+                local flag = true
+                while true do
+                    if i ~= #pai then
+                        pai_3 = pai[i + 1]
+                        --455567这里可结合的可能为 45 46 否则是45 45 45 46
+                        --如果当前的value不等于下一个value则和下一个结合避免重复
+                        if pai_2 == pai_3 then
+                            --continue
+                            flag = false
+                            break
                         end
                     end
---                    local mius = v1 - v0
-                    local mius = subArr[i]%10 - subArr[1]%10
-                    if  mius < 3 and isgo then
-                        tmp1 = subArr[1]
-                        tmp2 = subArr[i]
-                        table.insert(table3, table.remove(subArr, i))
-                        table.insert(table3, table.remove(subArr, 1))
-                        getNeedHunInSub(subArr, hNum+1)
-                        table.insert(subArr, table.remove(table3, #table3))
-                        table.insert(subArr, table.remove(table3, #table3))
-                        table.sort(subArr)
+                    if pai_2 - pai_1 < 3 then
+                        local tmpcard = m_table.clone(pai)
+                        m_table.removebyvalue(tmpcard, pai_1, false)
+                        m_table.removebyvalue(tmpcard, pai_2, false)
+                        getNeedHunInSub(tmpcard, needNum + 1)
+                        -- table.insert(pai, i, pai_2)
+                        -- table.insert(pai, 1, pai_1)
+                        flag = false
+                        break
+                    else
+                        flag = true
+                        break
                     end
+                end
+                --check break or continue
+                if flag then
+                    break
                 end
             end
         end
-        -- 第一个自己一铺
-        if  hNum + getModNeedNum(lArr-1,false)+2 < g_NeedHunCount then
-            tmp = subArr[1]
-            table.insert(table4, table.remove(subArr, 1))
-            getNeedHunInSub( subArr, hNum + 2 )
-            table.insert(subArr, table.remove(table4, #table4))
-            table.sort(subArr)
-        end
-    else
-        return
     end
+    --[[
+        //第一个和其它两个一扑
+        //后面间隔两张张不跟前面一张相同222234 
+        //可能性为222 234
+    ]]
+    for i = 2, #pai do
+        if needNum >= g_NeedHunCount then
+            break
+        end
+        pai_2 = pai[i]
+        while true do
+            -- if i + 1 < #pai then
+            --  if pai[i + 1] == pai_2 then
+            --      break --continue for
+            --  end
+            -- end
+
+            for j = i + 1, #pai do
+                if needNum >= g_NeedHunCount then
+                    break
+                end
+                pai_3 = pai[j]
+                if pai_1 == pai_3 then
+                    -- print("cao")
+                end
+                while true do
+                    -- if j + 1 <= #pai then
+                    --  if pai_3 == pai[j + 1] then
+                    --      break --continue for
+                    --  end
+                    -- end
+                    --判断是否能成顺
+                    if test3Combine(pai_1, pai_2, pai_3) then
+                        local tmpcard = m_table.clone(pai)
+                        m_table.removebyvalue(tmpcard, pai_1, false)
+                        m_table.removebyvalue(tmpcard, pai_2, false)
+                        m_table.removebyvalue(tmpcard, pai_3, false)
+                        getNeedHunInSub(tmpcard, needNum)
+                        break
+                    end
+                    break
+                end
+            end -- end for
+            break
+        end
+    end --end for
 end
 
 function test2Combine( mj1, mj2 )

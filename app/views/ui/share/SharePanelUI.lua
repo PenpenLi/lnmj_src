@@ -22,7 +22,8 @@ function SharePanelUI:onCreate()
     if UserData.isActivation == true then
         self.args = {title="一起来玩么么岭南麻将吧！",desc="邀请您加入【么么岭南麻将】，下载完后，输入激活码:"..UserData.uid.."进行激活游戏!",webUrl=weburl,imageUrl=""}
     else
-        self.args = {title="一起来玩么么岭南麻将吧！",desc="邀请您加入【么么岭南麻将】，点击该链接，进入下载页面，下载游戏！",webUrl=weburl,imageUrl=""}
+        self.args = {title="一起来玩么么岭南麻将吧！",desc="邀请您加入【么么岭南麻将】，下载完后，输入激活码:"..UserData.userInfo.activationCode.."进行激活游戏!",webUrl=weburl,imageUrl=""}
+        --self.args = {title="一起来玩么么岭南麻将吧！",desc="邀请您加入【么么岭南麻将】，点击该链接，进入下载页面，下载游戏！",webUrl=weburl,imageUrl=""}
     end
 end
 
