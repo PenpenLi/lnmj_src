@@ -206,6 +206,14 @@ function UserData:setTableConfig(table_config)
         else
             UserData:setRule("无鬼")
         end
+    elseif (UserData.curMahjongType == 5)then
+        if temp.laizi then
+            if temp.baiban then
+                UserData:setRule("白板做鬼")
+            end
+        else
+            UserData:setRule("无鬼")
+        end
     else
         if temp.laizi then
             UserData:setRule("红中癞子")
@@ -241,7 +249,7 @@ function UserData:setTableConfig(table_config)
     else
         if temp.find_bird ~= nil and temp.find_bird > 0 then
             if 1 == temp.find_bird then
-                if UserData:isChenZhou() then
+                if UserData:isChenZhou() or UserData:isNingXiang() then
                     UserData:setRule("数字1马")
                 else
                     UserData:setRule("爆炸马")
@@ -315,7 +323,15 @@ function UserData:getShareDesc(data)
             end
         else
             txt = txt .."无鬼 "
-        end    
+        end 
+    elseif(UserData.curMahjongType == 5)then
+        if temp.laizi then
+            if temp.baiban then
+                txt = txt .."白板做鬼 "
+            end
+        else
+            txt = txt .."无鬼 "
+        end     
     else
         if temp.laizi then
             txt = txt .."红中癞子 "
@@ -349,7 +365,7 @@ function UserData:getShareDesc(data)
     else
          if temp.find_bird ~= nil and temp.find_bird > 0 then
             if 1 == temp.find_bird then
-                if UserData:isChenZhou() then
+                if UserData:isChenZhou() or UserData:isNingXiang() then
                     txt = txt .."数字1马 "
                 else
                     txt = txt .."爆炸马 "
@@ -400,7 +416,17 @@ function UserData:isLaizi()
             end
         else
             return false
-        end     
+        end   
+    elseif self.isNingXiang() then
+        if self.table_config then
+            if self.table_config.rule.laizi then
+                if self.table_config.rule.baiban then
+                    return true
+                end
+            end
+        else
+            return false
+        end       
     else
         if self.table_config then
             return self.table_config.rule.laizi or self.table_config.rule.hongzhong
@@ -408,6 +434,7 @@ function UserData:isLaizi()
             return false
         end
     end
+    return false
 end
 
 --获取总牌数
@@ -435,7 +462,21 @@ function UserData:getTotalCardNum()
             else
                 return 136
             end
-        end       
+        end 
+     elseif self.isNingXiang() then
+        if self.table_config.rule.no_feng == true then --不带风
+            if self:isLaizi() then --有鬼牌
+                return 112
+            else --无鬼牌
+                return 108
+            end
+        else --带风
+            if self.table_config.rule.no_wan == true then
+                return 100
+            else
+                return 136
+            end
+        end             
     else
         if self.table_config.player_count < 3 then
             return 64
@@ -644,9 +685,13 @@ function UserData:getCurBgType()
     return cc.UserDefault:getInstance():getStringForKey("setting_bg_type")
 end
 
+function UserData:getLocalAccessToken()
+    return cc.UserDefault:getInstance():getStringForKey("local_access_token")
+end
+
 --获取可胡七对的params,听牌算法需要用
 function UserData:getQiDuiTbl()
-    if UserData:isHongZhong() or UserData:isZhuanZhuan() or UserData:isChenZhou() then
+    if UserData:isHongZhong() or UserData:isZhuanZhuan() or UserData:isChenZhou() or UserData:isNingXiang() then
         if UserData.table_config.rule.seven_hu then
             return {qidui2 = true}
         else
@@ -677,7 +722,17 @@ function UserData:getLaiziId()
         if UserData.laiziCardId then
             return UserData.laiziCardId
         end
-        return 0    
+        return 0  
+    elseif self.isNingXiang() then
+        if self.table_config.rule.laizi then
+            if self.table_config.rule.baiban then
+                return 47
+            end
+        end
+        if UserData.laiziCardId then
+            return UserData.laiziCardId
+        end
+        return 0            
     else
         if UserData:isLaizi() then
             return 45

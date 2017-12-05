@@ -93,6 +93,7 @@ function LoginUI:onNetChange()
             consts.HttpHost = "119.29.64.46:40001"
             --consts.GameHttpHost = "123.207.74.135:8001"
             consts.GameHttpHost = "119.29.64.46:8001"
+            -- consts.GameHttpHost = "111.230.167.175:8001"
             -- consts.BIHttpHost = consts.BIHttpHost_wan
          end
      end
@@ -121,10 +122,17 @@ function LoginUI:onThirdLogin(data)
         UIMgr:closeUI(consts.UI.LoadingDialogUI)    
         return 
     end
+    --先读取本地保存的token
+    -- local access_token = LocalData.data.thirdLoginData.access_token
+    -- UIMgr:showTips(access_token)
+    -- if access_token == nil or access_token == "" then
+    --     access_token = data.access_token or data.accessToken
+    -- end
     self.thirdLoginData = data 
     data = data.data
     HttpServiers:login({
         openId           = data.openid,
+        --accessToken      = access_token or data.accessToken,
         accessToken      = data.access_token or data.accessToken,
         refreshToken = data.refresh_token or data.refreshToken,
         wechatAppId = consts.wechatAppId }, handler(self, self.loginCallback))
@@ -137,6 +145,12 @@ function LoginUI:loginSuccess()
         self.thirdLoginData.data.access_token = UserData.userInfo.wechatAccessToken or self.thirdLoginData.data.access_token
         self.thirdLoginData.data.refresh_token = UserData.userInfo.wechatRefreshToken or self.thirdLoginData.data.refresh_token
     end
+    --授权成功后，把token保存在本地，一遍下次登陆使用
+    --cc.UserDefault:getInstance():setStringForKey("local_access_token", self.thirdLoginData.data.access_token)
+    --local tmp_access_token = self.thirdLoginData.data.access_token
+    -- tmp_access_token = tostring(tmp_access_token)
+    --UIMgr:showTips(tmp_access_token)
+
     LocalData.data.thirdLoginData = self.thirdLoginData
     LocalData:save()
     --BIHttpClient:postBIeventInfo(consts.BIeventType.click,consts.BIcurrentPath.loginSuccessClick)

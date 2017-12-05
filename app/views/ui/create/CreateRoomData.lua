@@ -48,7 +48,7 @@ function createData:getGameRule(tab)
         else
             data.game_type = 2
         end
-    elseif tab == 4 or tab == 2 then
+    elseif tab == 4 or tab == 2 or tab == 3 or tab == 5 then
         data.game_type = 2
     end
     --庄闲
@@ -135,7 +135,16 @@ function createData:getGameRule(tab)
             if box:isSelected() then
                 data.find_bird = k*2
             end
-        end       
+        end  
+    elseif 5 == tab then
+        if boxlist[7][1]:isSelected() then --爆炸马
+            data.find_bird = 1
+        end
+        for k,box in ipairs(boxlist[8]) do
+            if box:isSelected() then
+                data.find_bird = k*2
+            end
+        end      
     else
         for k,box in ipairs(boxlist[5]) do
             if box:isSelected() then
@@ -173,14 +182,22 @@ function createData:getGameRule(tab)
         data.seven_hu_4_point = self:isSelected(boxlist[6][3])
         data.seven_hu = true
     elseif 5 == tab then
-        data.kaiwang = self:isSelected(boxlist[3][1])
-        data.firstHu = self:isSelected(boxlist[3][2])
-        for k,box in ipairs(boxlist[4]) do
-            if box:isSelected() then
-                data.bighu = k + 5
-                break
-            end
-        end
+        data.laizi      = not(self:isSelected(boxlist[3][1]))
+        data.baiban = self:isSelected(boxlist[3][2])
+        data.kaiwang = self:isSelected(boxlist[3][3])
+
+        data.no_wan = self:isSelected(boxlist[4][1])
+        data.no_feng = self:isSelected(boxlist[4][2])
+        data.all_card = self:isSelected(boxlist[4][3])
+
+        data.qiang_gang = self:isSelected(boxlist[5][1])
+        data.ming_gang = self:isSelected(boxlist[5][2])
+        data.seven_hu   = self:isSelected(boxlist[5][3])
+
+        data.qiang_gang_quanbao = self:isSelected(boxlist[6][1])
+        data.gang_bao_quanbao = self:isSelected(boxlist[6][2])
+        data.again_banker = self:isSelected(boxlist[6][3])
+
     elseif 6 == tab then
         data.huangzhuang = self:isSelected(boxlist[3][2])
         if boxlist[4][1]:isSelected() then

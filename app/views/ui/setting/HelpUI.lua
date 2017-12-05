@@ -17,7 +17,7 @@ local mjScale = 1.3
 
 local tabPos = {1770,1720,2300,2450}
 
-local tabNum = 4
+local tabNum = 5
 local size = cc.size(800, 560)
 -- local pos = cc.p(440, 130)
 local pos = cc.p(330, 20)
@@ -97,10 +97,10 @@ function HelpUI:onClickTab(tag)
     if(tag == 1) then
         url = "uires/uiSetting/zhuanzhuan.html"
     elseif(tag == 5) then
-        url = "uires/uiSetting/ningxiang.html"
+        url = "uires/uiSetting/yunfu.html"
     elseif(tag == 2) then
         --url = "uires/uiSetting/changsha.html"
-        url = "uires/uiSetting/tuidaohu.html"
+        url = "uires/uiSetting/lingnan.html"
     elseif(tag == 6) then
         url = "uires/uiSetting/changde.html"
     elseif(tag == 3) then
@@ -174,10 +174,10 @@ function HelpUI:update(data)
         btn.m_btn:addClickEventListener(function(sender) self:onClickTab(sender:getTag()) end)
     end
     --1转转 2长沙 3郴州 4红中 5宁乡 6常德
-    --1转转 2推倒胡 3肇庆麻将 4红中 5广东鸡胡
+    --1转转 2岭南麻将 3肇庆麻将 4红中 5云浮麻将
     --顺序
     --local tab_seq_list = {1, 5, 2, 4, 3}
-    local tab_seq_list = {1, 2, 3, 4}
+    local tab_seq_list = {1, 2, 3, 4,5}
     for _, v in pairs(tab_seq_list) do
         self.list_tab:pushBackCustomItem(self["tab_btn_"..v])
     end

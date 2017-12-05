@@ -595,7 +595,7 @@ function CardResultUI:getAgainBanker(againBanker)
     if againBanker == nil then
         return ""
     end
-    if UserData:isChenZhou() then
+    if UserData:isChenZhou() or UserData:isNingXiang() then
         if againBanker == 1 then
             return "连庄"..TSpace
         end
@@ -690,7 +690,7 @@ function CardResultUI:getBirdCount(chair_id)
         -- if UserData:isHongZhong() then
         --     return "中码X"..self.bridCount
         -- elseif UserData:isChangDe() then
-        if UserData:isChangDe() or UserData:isHongZhong() or UserData:isChangSha() or UserData:isChenZhou() or UserData:isZhuanZhuan() then
+        if UserData:isChangDe() or UserData:isHongZhong() or UserData:isChangSha() or UserData:isChenZhou() or UserData:isNingXiang() or UserData:isZhuanZhuan() then
             if 1 == #UserData.cardResult.birdCard then
                 if UserData:isHongZhong() then
                     if 45 == UserData.cardResult.birdCard[1] then
@@ -699,7 +699,7 @@ function CardResultUI:getBirdCount(chair_id)
                         return "中马X"..(UserData.cardResult.birdCard[1] % 10)
                     end
                 else
-                    if UserData:isChenZhou() then --肇庆
+                    if UserData:isChenZhou() or UserData:isNingXiang() then --肇庆和云浮
                         if UserData.cardResult.birdCard[1] >= 41 then --风牌一个10马
                             return "中马X5"
                         else
@@ -709,7 +709,7 @@ function CardResultUI:getBirdCount(chair_id)
                                 return "中马X"..(UserData.cardResult.birdCard[1] % 10)
                             end
                         end  
-                    else --推倒胡
+                    else --岭南麻将
                         if UserData.cardResult.birdCard[1] >= 41 then --风牌一个10马
                             return "中马X10"
                         else

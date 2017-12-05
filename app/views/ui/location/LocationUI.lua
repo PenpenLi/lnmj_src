@@ -89,7 +89,7 @@ function LocationUI:getLocatStr( lat1, lng1, lat2, lng2 )
 
     if(not lat1 or not lng1 or not lat2 or not lng2)then return "无法识别",3 end
 
-    local juli = helper.distance_earth(lat1, lng1, lat2, lng2)
+    local juli = helper.distance_earth(tonumber(lng1),tonumber(lat1),tonumber(lng2),tonumber(lat2))
 
     if(juli > 10000 and juli < 5000000) then
         return string.format("%.1f公里",juli/1000),2

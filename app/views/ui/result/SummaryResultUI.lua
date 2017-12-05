@@ -261,7 +261,7 @@ function SummaryResultUI:updateLayerInfo(i, entity)
     local count = 0
     if (UserData:isZhuanZhuan() or UserData:isChangDe()) and  UserData.game_balance_result.player_result then
         count = #UserData.game_balance_result.player_result
-    elseif (UserData:isChenZhou() or UserData:isHongZhong()) and  UserData.game_balance_result.player_result then
+    elseif (UserData:isChenZhou() or UserData:isNingXiang() or UserData:isHongZhong()) and  UserData.game_balance_result.player_result then
         count = #UserData.game_balance_result.player_result
     else
         count = #UserData.game_balance_result.player_result
@@ -462,8 +462,7 @@ function SummaryResultUI:setWinnerLog(point)
                     activationCode = activationCode,
                     token = UserData.userInfo.token
     }
-    print("=========================")
-    dump(sendData)
+    -- dump(sendData)
     HttpServiers:setWinnerLog(sendData,
         function(entity,response,statusCode)
             if response and (response.status == 1 or response.errCode == 0) then

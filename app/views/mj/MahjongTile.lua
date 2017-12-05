@@ -38,6 +38,11 @@ function MahjongTile:setData(params)
                 if params.is_dfree then
             self.is_free = false
         end
+    elseif UserData:isNingXiang() then
+        self.is_free = UserData:isLaizi() and self.id == 47
+                if params.is_dfree then
+            self.is_free = false
+        end 
     else
         self.is_free = UserData:isLaizi() and self.id == 45
         if params.is_dfree then

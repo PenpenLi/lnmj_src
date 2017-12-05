@@ -95,10 +95,10 @@ consts.GameHuType = {
 
 consts.GameTypeName = {
     "转转",
-    "推倒胡",
+    "岭南麻将",
     "肇庆",
     "红中",
-    "广东鸡胡",
+    "云浮麻将",
     "常德",
 }
 --能使用听牌提示的麻将类型 ps：对应GameTypeName，改的时候顺便改下
@@ -252,7 +252,7 @@ consts.roomCreateMsg.tab_1 =
     {"",{1,"一码全中","createma2"},{2}}
 }
 
---推倒胡
+--岭南麻将
 consts.roomCreateMsg.tab_2 =
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
@@ -266,14 +266,6 @@ consts.roomCreateMsg.tab_2 =
 }
 
 --肇庆
--- consts.roomCreateMsg.tab_3 =
--- {
---     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
---     {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},
---     {"玩法:",{2,"红中癞子","createCon3"},{2,"荒庄荒杠","createCon8"},{2}},
---     {"扎码:",{1,"一码全中","yimaquanzhong"}},
---     {"",{1,"扎2码","createma2"},{1,"扎4码","createma4"},{1,"扎6码","createma6"}}
--- }
 consts.roomCreateMsg.tab_3 =
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
@@ -295,14 +287,18 @@ consts.roomCreateMsg.tab_4 =
     {"",{1,"扎2码","createma2"},{1,"扎4码","createma4"},{1,"扎6码","createma6"}}
 }
 
---广东鸡胡
+--云浮麻将
 consts.roomCreateMsg.tab_5 =
 {
     {"局数:",{1," 8局","createC8","(房卡x1)"},{1,"16局","createC16","(房卡x2)"}},
-    {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"}},
-    {"玩法:",{2,"红中癞子","createCon3"},{2,"荒庄荒杠","createCon8"},{2}},
-    {"扎码:",{1,"一码全中","yimaquanzhong"}},
-    {"",{1,"扎2码","createma2"},{1,"扎4码","createma4"},{1,"扎6码","createma6"}}
+    {"人数:",{1,"4人局","createP4"}},
+    -- {"人数:",{1,"4人局","createP4"},{1,"3人局","createP3"},{1,"2人局","createP2"}},
+    {"玩法:",{1,"无鬼","createCon6"},{1,"白板做鬼","createCon6"},{1,"翻鬼","createCon6"}},
+    {"",{1,"无万子","createCon6"},{1,"无番子","createCon6"},{1,"全子","createCon6"}},
+    {"",{2,"抢杠胡","createWin3"},{2,"可抢明杠","createWin5"},{2,"可胡七对","createCon2"}},
+    {"",{2,"抢杠全包","createCon3"},{2,"杠爆全包","createCon3"},{2,"连庄","createCon3"}},
+    {"买马:",{1,"数字1马","yimaquanzhong"}},
+    {"",{1,"买2马","createma2"},{1,"买4马","createma4"},{1,"买6马","createma6"}}
 }
 
 consts.bg_type = 
