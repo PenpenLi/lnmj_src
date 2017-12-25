@@ -62,6 +62,11 @@ function HttpServiers:queryqFankuiResult(params,callback)
    return HttpClient:asyncGet(consts.HttpUrl.getFankuiResult, params,callback)
 end
 
+--申请代理
+function HttpServiers:applyAgentResult(params,callback)
+   return HttpClient:asyncGet(consts.HttpUrl.getAgentResult, params,callback)
+end
+
 --活动公告，系统公告，游戏消息，玩法列表
 function HttpServiers:queryArticleList(params,callback)
    return HttpClient:asyncGet(consts.HttpUrl.getArticleList, params,callback)
